@@ -165,11 +165,10 @@ public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> imp
      * 插入实体
      * <p>
      * @param t 实体类
-     * @throws java.lang.Exception
      * @see tk.mybatis.mapper.common.Mapper#insertSelective
      */
     @Override
-    public void save(T t) throws Exception {
+    public void save(T t) {
         this.getMapper().insertSelective(t);
     }
 

@@ -69,8 +69,7 @@ public abstract class EntityController<T, PrimaryKey extends Serializable> exten
             throws Exception {
         this.getBaseService().update(primaryKey, request);
         T t = this.getBaseService().selectByPrimaryKey(primaryKey);
-        StatusMsg statusMsg = new StatusMsg();
-        statusMsg.setStatus(StatusMsg.SUCCESS);
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put("message", "修改信息成功,修改后的实体如下：");
         statusMsg.getMessage().put("entity", t);
         return statusMsg;
@@ -88,8 +87,7 @@ public abstract class EntityController<T, PrimaryKey extends Serializable> exten
     public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, PrimaryKey primaryKey) throws Exception {
         T t = this.getBaseService().selectByPrimaryKey(primaryKey);
         this.getBaseService().deleteById(primaryKey);
-        StatusMsg statusMsg = new StatusMsg();
-        statusMsg.setStatus(StatusMsg.SUCCESS);
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put("message", "删除成功,删除实体如下：");
         statusMsg.getMessage().put("entity", t);
         return statusMsg;
@@ -106,8 +104,7 @@ public abstract class EntityController<T, PrimaryKey extends Serializable> exten
      */
     public StatusMsg save(HttpServletRequest request, HttpServletResponse response, T t) throws Exception {
         this.getBaseService().save(t);
-        StatusMsg statusMsg = new StatusMsg();
-        statusMsg.setStatus(StatusMsg.SUCCESS);
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put("message", "保存成功,保存的实体如下：");
         statusMsg.getMessage().put("entity", t);
         return statusMsg;

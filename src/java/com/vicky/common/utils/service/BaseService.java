@@ -29,7 +29,7 @@ public interface BaseService<T, PrimaryKey extends Serializable> {
 
     public void deleteById(PrimaryKey primaryKey) throws Exception;
 
-    public void save(T t) throws Exception;
+    public void save(T t);
 
     public Map<String, Object> getPageData(HttpServletRequest request) throws Exception;
 }

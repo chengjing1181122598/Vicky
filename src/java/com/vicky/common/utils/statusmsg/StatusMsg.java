@@ -21,6 +21,13 @@ public class StatusMsg {
     private String status;
     private Map<String, Object> message = new HashMap<>();
 
+    public StatusMsg() {
+    }
+
+    public StatusMsg(String status) {
+        this.status = status;
+    }
+
     /**
      * @return the status
      */

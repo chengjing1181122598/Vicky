@@ -38,6 +38,20 @@ public class UserController extends EntityController<User, String> {
         return this.userService;
     }
 
+    @RequestMapping("finishRegister")
+    @ResponseBody
+    public StatusMsg prepareRegister(HttpServletRequest request, String activateCode) throws Exception {
+        if (activateCode.equals(request.getSession().getAttribute("avtivateCode"))) {
+            User user = (User) request.getSession().getAttribute("registerUser");
+            this.userService.save(user);
+        } else {
+            throw new Exception("激活码不正确!");
+        }
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
+        statusMsg.getMessage().put("message", "用户激活成功!");
+        return statusMsg;
+    }
+
     @RequestMapping("prepareRegister")
     @ResponseBody
     public StatusMsg prepareRegister(HttpServletRequest request, User u) throws Exception {
@@ -52,17 +66,16 @@ public class UserController extends EntityController<User, String> {
             throw new Exception("该邮箱已注册");
         }
 
-        u.setCreateTime(new Date());
-        u.setPassword(EncodePassword.encodePassword(u.getPassword()));
-        request.getSession().setAttribute("registerUser", u);
-
-        String avtivateCode = (int) (Math.random() * 10000000) + "";
-        request.getSession().setAttribute("avtivateCode", avtivateCode);
+        String avtivateCode = (int) (Math.random() * 1000000) + "";
         Mail activateMail = new ActivateMail(email, avtivateCode);
         SendEmailable sendEmailable = new SendEmailImpl();
         sendEmailable.send(activateMail);
-        StatusMsg statusMsg = new StatusMsg();
-        statusMsg.setStatus(StatusMsg.SUCCESS);
+
+        u.setCreateTime(new Date());
+        u.setPassword(EncodePassword.encodePassword(u.getPassword()));
+        request.getSession().setAttribute("registerUser", u);
+        request.getSession().setAttribute("avtivateCode", avtivateCode);
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put("message", "发送邮件成功,请前往邮箱获取验证码!");
         return statusMsg;
     }
