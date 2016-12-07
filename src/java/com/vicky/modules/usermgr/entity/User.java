@@ -19,7 +19,7 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "user")
-public class User implements Serializable {
+public class User implements Serializable, Cloneable {
 
     @Id
     @Column(name = "username")
@@ -36,6 +36,20 @@ public class User implements Serializable {
     @Column(name = "signature")
     private String signature;
 
+    public User() {
+    }
+
+    public User(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
+    
     /**
      * @return the username
      */

@@ -6,6 +6,7 @@
 package com.vicky.common.utils.update;
 
 import com.vicky.common.utils.page.Condition;
+import com.vicky.common.utils.statusmsg.StatusMsgException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,7 +44,7 @@ public class UpdateProperty {
      * @return 要修改的属性集合
      * @throws java.text.ParseException
      */
-    public static List<UpdateProperty> getUpdatePropertyListFromHttpRequest(HttpServletRequest request) throws ParseException, Exception {
+    public static List<UpdateProperty> getUpdatePropertyListFromHttpRequest(HttpServletRequest request) throws Exception {
         Map<String, String[]> map = request.getParameterMap();
         List<UpdateProperty> updatePropertys = new ArrayList<>();
         for (Map.Entry<String, String[]> entry : map.entrySet()) {
@@ -94,7 +95,7 @@ public class UpdateProperty {
                             updateProperty.setValue(entry.getValue()[0]);
                             break;
                         default:
-                            throw new Exception("不支持的数据类型：" + strings[1]);
+                            throw new StatusMsgException("不支持的数据类型：" + strings[1]);
                     }
                     if (updateProperty.getValue() != null) {
                         updatePropertys.add(updateProperty);

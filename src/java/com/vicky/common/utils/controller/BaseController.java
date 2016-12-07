@@ -6,6 +6,8 @@
 package com.vicky.common.utils.controller;
 
 import com.vicky.common.utils.statusmsg.StatusMsg;
+import com.vicky.common.utils.statusmsg.StatusMsgException;
+import com.vicky.modules.usermgr.entity.User;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,14 +59,16 @@ public class BaseController {
     @ExceptionHandler
     @ResponseBody
     protected StatusMsg exceptionHandler(HttpServletRequest request, Exception exception) {
-        this.getLogger().error("toString：" + exception.toString());
-        this.getLogger().error("getMessage：" + exception.getMessage());
-        this.getLogger().error("exception：", exception);
+        if (!exception.getClass().equals(StatusMsgException.class)) {
+            exception.printStackTrace();
+            this.getLogger().error("toString：" + exception.toString());
+            this.getLogger().error("getMessage：" + exception.getMessage());
+            this.getLogger().error("exception：", exception);
+        }
         StatusMsg statusMsg = new StatusMsg();
         statusMsg.setStatus(StatusMsg.ERROR);
         statusMsg.getMessage().put("toString", exception.toString());
-        statusMsg.getMessage().put("getMessage", exception.getMessage());
-        exception.printStackTrace();
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, exception.getMessage());
         return statusMsg;
     }
 }

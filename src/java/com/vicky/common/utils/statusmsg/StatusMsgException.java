@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vicky.common.utils.sendemail;
-
-import org.slf4j.Logger;
+package com.vicky.common.utils.statusmsg;
 
 /**
- * 发送邮件接口
  *
  * @author Vicky
  */
-public interface SendEmailable {
+public class StatusMsgException extends Exception {
 
-    public void send(Mail mail) throws Exception;
+    public StatusMsgException(String message) {
+        super(message);
+    }
+    
 }

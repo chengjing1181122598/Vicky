@@ -5,6 +5,7 @@
  */
 package com.vicky.common.utils.page;
 
+import com.vicky.common.utils.statusmsg.StatusMsgException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class Condition {
      *
      * @param request HttpServletRequest
      * @return 条件集合
-     * @throws java.text.ParseException
+     * @throws java.lang.Exception
      */
     public static List<Condition> getConditionListFromHttpRequest(HttpServletRequest request) throws Exception {
         Map<String, String[]> map = request.getParameterMap();
@@ -198,7 +199,7 @@ public class Condition {
                             condition.setValue(entry.getValue()[0]);
                             break;
                         default:
-                            throw new Exception("不支持的数据类型：" + strings[2]);
+                            throw new StatusMsgException("不支持的数据类型：" + strings[2]);
                     }
                     if (condition.getValue() != null || condition.getInSet().size() >= 0
                             || condition.getNotInSet().size() > 0 || strings[1].equals(Condition.NULL)

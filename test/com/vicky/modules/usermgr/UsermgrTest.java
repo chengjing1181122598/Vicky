@@ -55,19 +55,6 @@ public class UsermgrTest {
                 .param("order_property", "age")
                 .param("order_type", "asc")))
                 .andExpect(status().isOk()).andDo(print());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String activateCode = reader.readLine();
-
-        mockMvc.perform((post("/user/finishRegister")
-                .param("activateCode", activateCode)
-                .param("password", "5201314liweiqi")
-                .param("email", "1181122598@qq.com")
-                .param("condition_GT_D_birthday", "1994-10-10")
-                .param("pageSize", "10")
-                .param("pageIndex", "1")
-                .param("order_property", "age")
-                .param("order_type", "asc")))
-                .andExpect(status().isOk()).andDo(print());
     }
 
 }

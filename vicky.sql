@@ -79,7 +79,6 @@ create table collect_user
    collecting_username  varchar(255) not null comment '收藏用户名',
    collected_username   varchar(255) not null comment '被收藏用户名',
    create_time          datetime not null comment '收藏时间',
-   collected_user_head_relative_path varchar(255) not null comment '被收藏用户的头像图片文件相对路径',
    primary key (collect_user_id),
    unique key AK_ing_ed_user_unique (collecting_username, collected_username)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
