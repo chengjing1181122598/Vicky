@@ -41,6 +41,7 @@ public class UserController extends EntityController<User, String> {
     @RequestMapping("finishRegister")
     @ResponseBody
     public StatusMsg prepareRegister(HttpServletRequest request, String activateCode) throws Exception {
+        System.out.println(request.getSession().getAttribute("avtivateCode"));
         if (activateCode.equals(request.getSession().getAttribute("avtivateCode"))) {
             User user = (User) request.getSession().getAttribute("registerUser");
             this.userService.save(user);
