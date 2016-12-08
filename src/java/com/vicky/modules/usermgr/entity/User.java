@@ -21,6 +21,9 @@ import javax.persistence.Temporal;
 @Table(name = "user")
 public class User implements Serializable, Cloneable {
 
+    public static final String DEFAULT_HEAD_RELATIVE_PATH = "/vicky_file/default/user_head.jpg";
+    public static final String DEFAULT_HEAD_ABSOLUTE_PATH = "/F:/nginx_file/html/vicky_file/default/user_head.jpg";
+
     @Id
     @Column(name = "username")
     private String username;
@@ -35,6 +38,10 @@ public class User implements Serializable, Cloneable {
     private String sex;
     @Column(name = "signature")
     private String signature;
+    @Column(name = "image_relative_path")
+    private String relativePath;
+    @Column(name = "image_absolute_path")
+    private String absolutePath;
 
     public User() {
     }
@@ -48,8 +55,6 @@ public class User implements Serializable, Cloneable {
         return super.clone(); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    
     /**
      * @return the username
      */
@@ -132,5 +137,33 @@ public class User implements Serializable, Cloneable {
      */
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    /**
+     * @return the relativePath
+     */
+    public String getRelativePath() {
+        return relativePath;
+    }
+
+    /**
+     * @param relativePath the relativePath to set
+     */
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
+    }
+
+    /**
+     * @return the absolutePath
+     */
+    public String getAbsolutePath() {
+        return absolutePath;
+    }
+
+    /**
+     * @param absolutePath the absolutePath to set
+     */
+    public void setAbsolutePath(String absolutePath) {
+        this.absolutePath = absolutePath;
     }
 }

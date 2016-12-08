@@ -105,14 +105,13 @@ public class WebFileUtils {
      *
      * @param multipartFile MultipartFile类型
      * @param otherServerPath 其他服务器绝对根路径,不包括项目根路径,即文件路径
-     * @param otherServerUrl 其他服务器url,即主机地址和端口url,不包括项目根路径
      * @param webRootPath web根目录,即浏览器主机url后面的第一个,适用与图片,视频,音乐等文件的"src"的填写
      * @param directory 保存的目录
      * @param username 用户名,输入这个参数可以让文件清晰容量梳理
      * @return 字符串数组,其中String[0]为文件绝对路径,String[1]为其他服务器的路径
      */
     public static String[] savePublicFileAtOtherServer(MultipartFile multipartFile, String otherServerPath,
-            String otherServerUrl, String webRootPath, String directory, String username) {
+            String webRootPath, String directory, String username) {
         if (webRootPath.charAt(0) != '/') {
             webRootPath = "/" + webRootPath;
         }
@@ -135,7 +134,6 @@ public class WebFileUtils {
             url = url + "/" + c;
         }
         url = url + "/" + username + "/" + filename;
-        url = otherServerUrl + url;
         path = path + "/" + username;
         ThreadPool.FILE_THREADPOOL.execute(new WebFileSave(multipartFile, path, filename));
         path = path + "/" + filename;
