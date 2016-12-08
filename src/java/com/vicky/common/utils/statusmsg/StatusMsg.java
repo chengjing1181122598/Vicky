@@ -16,6 +16,7 @@ import java.util.Map;
 public class StatusMsg {
 
     public static final String MESSAGE = "message";
+    public static final String ENTITY = "entity";
 
     public static final String SUCCESS = "success";
     public static final String ERROR = "error";

@@ -184,6 +184,16 @@ public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> imp
     }
 
     /**
+     * 更新实体
+     * <p>
+     * @param t 实体类
+     * @see tk.mybatis.mapper.common.Mapper#updateByPrimaryKey
+     */
+    public void updateSelective(T t) {
+        this.getMapper().updateByPrimaryKeySelective(t);
+    }
+
+    /**
      * 更新实体,解析HttpServletRequest获得要更新的属性
      * <p>
      * @param id 实体主键
@@ -226,7 +236,7 @@ public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> imp
             }
         }
         if (haveUpdate) {
-            this.update(t);
+            this.updateSelective(t);
         } else {
             throw new StatusMsgException("实体没有任何属性被修改,请检查参数是否正确");
         }
