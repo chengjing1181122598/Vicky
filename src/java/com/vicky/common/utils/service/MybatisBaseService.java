@@ -8,6 +8,7 @@ package com.vicky.common.utils.service;
 import com.vicky.common.utils.page.Condition;
 import com.vicky.common.utils.page.Order;
 import com.vicky.common.utils.page.Page;
+import com.vicky.common.utils.statusmsg.StatusMsgException;
 import com.vicky.common.utils.update.UpdateProperty;
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -221,13 +222,13 @@ public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> imp
                 method.invoke(t, updateProperty.getValue());
                 haveUpdate = true;
             } catch (Exception exception) {
-                throw new Exception("实体属性参数错误,请检查参数是否正确");
+                throw new StatusMsgException("实体属性参数错误,请检查参数是否正确");
             }
         }
         if (haveUpdate) {
             this.update(t);
         } else {
-            throw new Exception("实体没有任何属性被修改,请检查参数是否正确");
+            throw new StatusMsgException("实体没有任何属性被修改,请检查参数是否正确");
         }
     }
 
@@ -378,7 +379,7 @@ public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> imp
                     criteria.andIsNotNull(condition.getProperty());
                     break;
                 default:
-                    throw new Exception("不支持的条件类型：" + condition.getCondition());
+                    throw new StatusMsgException("不支持的条件类型：" + condition.getCondition());
             }
         }
 
@@ -446,7 +447,7 @@ public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> imp
                     criteria.andIsNotNull(condition.getProperty());
                     break;
                 default:
-                    throw new Exception("不支持的条件类型：" + condition.getCondition());
+                    throw new StatusMsgException("不支持的条件类型：" + condition.getCondition());
             }
         }
 

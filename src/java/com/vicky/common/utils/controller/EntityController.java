@@ -35,9 +35,8 @@ public abstract class EntityController<T, PrimaryKey extends Serializable> exten
      * @param response HttpServletResponse
      * @param primaryKey 实体主键
      * @return 实体
-     * @throws java.lang.Exception
      */
-    public T getById(HttpServletRequest request, HttpServletResponse response, PrimaryKey primaryKey) throws Exception {
+    public T getById(HttpServletRequest request, HttpServletResponse response, PrimaryKey primaryKey){
         return this.getBaseService().selectByPrimaryKey(primaryKey);
     }
 
@@ -70,7 +69,7 @@ public abstract class EntityController<T, PrimaryKey extends Serializable> exten
         this.getBaseService().update(primaryKey, request);
         T t = this.getBaseService().selectByPrimaryKey(primaryKey);
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put("message", "修改信息成功,修改后的实体如下：");
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改信息成功,修改后的实体如下：");
         statusMsg.getMessage().put("entity", t);
         return statusMsg;
     }
@@ -88,7 +87,7 @@ public abstract class EntityController<T, PrimaryKey extends Serializable> exten
         T t = this.getBaseService().selectByPrimaryKey(primaryKey);
         this.getBaseService().deleteById(primaryKey);
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put("message", "删除成功,删除实体如下：");
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, "删除成功,删除实体如下：");
         statusMsg.getMessage().put("entity", t);
         return statusMsg;
     }
@@ -105,7 +104,7 @@ public abstract class EntityController<T, PrimaryKey extends Serializable> exten
     public StatusMsg save(HttpServletRequest request, HttpServletResponse response, T t) throws Exception {
         this.getBaseService().save(t);
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put("message", "保存成功,保存的实体如下：");
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, "保存成功,保存的实体如下：");
         statusMsg.getMessage().put("entity", t);
         return statusMsg;
     }

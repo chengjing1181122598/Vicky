@@ -5,9 +5,12 @@
  */
 package com.vicky.common.utils.sendemail;
 
+import com.vicky.common.utils.statusmsg.StatusMsgException;
 import javax.mail.internet.MimeUtility;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.HtmlEmail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 一个简单的发送邮件类
@@ -15,6 +18,8 @@ import org.apache.commons.mail.HtmlEmail;
  * @author Vicky
  */
 public class SendEmailImpl implements SendEmailable {
+
+    private final Logger logger = LoggerFactory.getLogger(SendEmailImpl.class);
 
     @Override
     public void send(Mail mail) throws Exception {
@@ -38,7 +43,10 @@ public class SendEmailImpl implements SendEmailable {
             htmlEmail.send();
         } catch (Exception exception) {
             exception.printStackTrace();
-            throw new Exception("发送邮件失败,请检查邮箱地址是否正确,如果该问题仍然存在,请联系V站官方!");
+            this.logger.error("toString：" + exception.toString());
+            this.logger.error("getMessage：" + exception.getMessage());
+            this.logger.error("exception：", exception);
+            throw new StatusMsgException("发送邮件失败,请检查邮箱地址是否正确,如果该问题仍然存在,请联系V站官方!");
         }
     }
 

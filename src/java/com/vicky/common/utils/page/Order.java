@@ -5,6 +5,7 @@
  */
 package com.vicky.common.utils.page;
 
+import com.vicky.common.utils.statusmsg.StatusMsgException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +55,7 @@ public class Order {
         String[] types = request.getParameterValues(Order.ORDER_TYPE);
         for (int i = 0; i < propertys.length; i++) {
             if (!types[i].equals(Order.ASC) || !types[i].equals(Order.DESC)) {
-                throw new Exception("排序只能是asc或者desc,当前排序为：" + types[i]);
+                throw new StatusMsgException("排序只能是asc或者desc,当前排序为：" + types[i]);
             }
             Order order = new Order();
             order.setProperty(propertys[i]);
