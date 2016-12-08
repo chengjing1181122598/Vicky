@@ -47,18 +47,32 @@ public class UserController extends EntityController<User, String> {
         return this.userService;
     }
 
+    @RequestMapping("logout")
+    @ResponseBody
+    public StatusMsg logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, "用户退出成功");
+        return statusMsg;
+    }
+
     @RequestMapping("update")
     @ResponseBody
-    public StatusMsg update(HttpServletRequest request, User updateUser) throws StatusMsgException {
+    public StatusMsg update(HttpServletRequest request, User updateUser) throws StatusMsgException, CloneNotSupportedException {
         User user = this.getUser();
-        updateUser.setUsername(user.getUsername());
-        updateUser.setPassword(null);
-        updateUser.setEmail(null);
-        updateUser.setCreateTime(null);
-        this.userService.update(user);
+        if (updateUser.getSex() != null && !updateUser.getSex().equals("")) {
+            user.setSex(updateUser.getSex());
+        }
+        if (updateUser.getSignature() != null && !updateUser.getSignature().equals("")) {
+            user.setSignature(updateUser.getSignature());
+        }
+        this.userService.updateSelective(user);
 
+        User returnUser = (User) this.getUser().clone();
+        returnUser.setPassword(null);
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改信息成功");
+        statusMsg.getMessage().put(StatusMsg.ENTITY, returnUser);
         return statusMsg;
     }
 
@@ -70,6 +84,7 @@ public class UserController extends EntityController<User, String> {
             throw new StatusMsgException("原来密码不正确");
         } else {
             user.setPassword(EncodePassword.encodePassword(afterPWD));
+            this.userService.updateSelective(user);
         }
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改密码成功");
@@ -79,16 +94,24 @@ public class UserController extends EntityController<User, String> {
     @Override
     @RequestMapping("getById")
     @ResponseBody
-    public User getById(HttpServletRequest request, HttpServletResponse response, String username) {
-        return this.userService.getByIdNoPassword(username);
+    public StatusMsg getById(HttpServletRequest request, HttpServletResponse response, String username) {
+        User user = this.userService.getByIdNoPassword(username);
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, user);
+        return statusMsg;
     }
 
     @RequestMapping("getUser")
     @ResponseBody
-    public User getUser(HttpServletRequest request) throws CloneNotSupportedException {
+    public StatusMsg getUser(HttpServletRequest request) throws CloneNotSupportedException, StatusMsgException {
+        if (this.getUser() == null) {
+            throw new StatusMsgException("用户没有登录");
+        }
         User user = (User) this.getUser().clone();
         user.setPassword(null);
-        return user;
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, user);
+        return statusMsg;
     }
 
     @RequestMapping("login")
@@ -111,7 +134,7 @@ public class UserController extends EntityController<User, String> {
         returnUser.setPassword(null);
         request.getSession().setAttribute("user", user);
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put("user", returnUser);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, returnUser);
         return statusMsg;
     }
 
