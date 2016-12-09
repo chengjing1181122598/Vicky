@@ -21,8 +21,8 @@ import javax.persistence.Temporal;
 @Table(name = "user")
 public class User implements Serializable, Cloneable {
 
-    public static final String DEFAULT_HEAD_RELATIVE_PATH = "/vicky_file/default/user_head.jpg";
-    public static final String DEFAULT_HEAD_ABSOLUTE_PATH = "/F:/nginx_file/html/vicky_file/default/user_head.jpg";
+    public static final String DEFAULT_HEAD_RELATIVE_PATH = "/vicky_file/default/user_head.png";
+    public static final String DEFAULT_HEAD_ABSOLUTE_PATH = "/F:/nginx_file/html/vicky_file/default/user_head.png";
 
     @Id
     @Column(name = "username")

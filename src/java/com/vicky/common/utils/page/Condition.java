@@ -31,7 +31,7 @@ public class Condition {
     public static final String SPLIT_STRING = "_";
 
     /*
-    参数类型
+    日期类型
      */
     public static final String DEFAULT_DATE_FORMAT1 = "yyyy-MM-dd HH:mm:ss";
     public static final String DEFAULT_DATE_FORMAT2 = "yyyy-MM-dd";
@@ -39,6 +39,10 @@ public class Condition {
     public static final String DEFAULT_DATE_FORMAT4 = "yyyy/MM/dd";
     public static final String DEFAULT_DATE_FORMAT5 = "yyyy年MM月dd日 HH:mm:ss";
     public static final String DEFAULT_DATE_FORMAT6 = "yyyy年MM月dd日";
+
+    /*
+    参数类型
+     */
     public static final String DATE_TYPE = "D";
     public static final String STRING_TYPE = "S";
     public static final String INTEGER_TYPE = "I";
