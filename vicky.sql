@@ -217,6 +217,8 @@ create table user
    password             varchar(255) not null comment '用户密码，非空，经过经过加密',
    sex                  varchar(2) comment '用户性别，只有三种情况，“男”，“女”，“保密”，为空的即是未知',
    signature            varchar(255) comment '个性签名，不能超过255个字',
+   image_relative_path  varchar(255) not null comment '用户头像图片文件相对路径',
+   image_absolute_path  varchar(255) not null comment '用户头像图片文件绝对路径',
    primary key (username),
    unique key AK_user_email_unique_key (email)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -231,18 +233,6 @@ create index user_table_email_index on user
    email
 );
 
-/*==============================================================*/
-/* Table: user_head                                             */
-/*==============================================================*/
-create table user_head
-(
-   username             varchar(255) not null comment '用户名，依赖用户表主键',
-   image_relative_path  varchar(255) not null comment '用户头像图片文件相对路径',
-   image_absolute_path  varchar(255) not null comment '用户头像图片文件绝对路径',
-   primary key (username)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-alter table user_head comment '用户头像表,保存用户头像图片信息';
 
 /*==============================================================*/
 /* Table: vedio                                                 */

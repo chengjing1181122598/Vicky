@@ -5,6 +5,8 @@
  */
 package com.vicky.modules.usermgr.controller;
 
+import com.vicky.common.finalpackage.Final;
+import com.vicky.common.utils.DealFile.WebFileUtils;
 import com.vicky.common.utils.controller.EntityController;
 import com.vicky.common.utils.encodepwd.EncodePassword;
 import com.vicky.common.utils.sendemail.Mail;
@@ -16,13 +18,17 @@ import com.vicky.common.utils.statusmsg.StatusMsgException;
 import com.vicky.modules.usermgr.entity.User;
 import com.vicky.modules.usermgr.service.UserService;
 import com.vicky.modules.usermgr.utils.ActivateMail;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -47,6 +53,37 @@ public class UserController extends EntityController<User, String> {
         return this.userService;
     }
 
+    public User getProtectedUser(User user) throws CloneNotSupportedException {
+        User returnUser = (User) user.clone();
+        returnUser.setPassword(null);
+        return returnUser;
+    }
+
+    @RequestMapping("updateHead")
+    @ResponseBody
+    public StatusMsg updateHead(@RequestParam(value = "headImage") MultipartFile file) throws IOException, CloneNotSupportedException {
+        User user = this.getUser();
+        file.getInputStream().available();
+
+        String[] paths = WebFileUtils.savePublicFileAtOtherServer(file,
+                Final.SERVER_PATH, Final.WEB_ROOT_PATH, Final.IMAGE_PATH, user.getUsername());
+
+        if (!user.getAbsolutePath().equals(User.DEFAULT_HEAD_ABSOLUTE_PATH)) {
+            File frontHeadImage = new File(user.getAbsolutePath());
+            frontHeadImage.delete();
+        }
+
+        user.setAbsolutePath(paths[0]);
+        user.setRelativePath(paths[1]);
+
+        this.userService.updateSelective(user);
+
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改头像成功");
+        statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(user));
+        return statusMsg;
+    }
+
     @RequestMapping("logout")
     @ResponseBody
     public StatusMsg logout(HttpServletRequest request) {
@@ -68,11 +105,9 @@ public class UserController extends EntityController<User, String> {
         }
         this.userService.updateSelective(user);
 
-        User returnUser = (User) this.getUser().clone();
-        returnUser.setPassword(null);
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改信息成功");
-        statusMsg.getMessage().put(StatusMsg.ENTITY, returnUser);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(user));
         return statusMsg;
     }
 
@@ -107,10 +142,8 @@ public class UserController extends EntityController<User, String> {
         if (this.getUser() == null) {
             throw new StatusMsgException("用户没有登录");
         }
-        User user = (User) this.getUser().clone();
-        user.setPassword(null);
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.ENTITY, user);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(this.getUser()));
         return statusMsg;
     }
 
@@ -130,11 +163,9 @@ public class UserController extends EntityController<User, String> {
             throw new StatusMsgException("密码错误");
         }
         user = this.userService.selectByPrimaryKey(user.getUsername());
-        User returnUser = (User) user.clone();
-        returnUser.setPassword(null);
         request.getSession().setAttribute("user", user);
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.ENTITY, returnUser);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(user));
         return statusMsg;
     }
 
@@ -145,6 +176,7 @@ public class UserController extends EntityController<User, String> {
         if (activateCode.equals(request.getSession().getAttribute("avtivateCode"))) {
             User user = (User) request.getSession().getAttribute("registerUser");
             this.userService.save(user);
+            request.getSession().setAttribute("user", user);
         } else {
             throw new StatusMsgException("激活码不正确!");
         }
@@ -175,6 +207,9 @@ public class UserController extends EntityController<User, String> {
 
         u.setCreateTime(new Date());
         u.setPassword(EncodePassword.encodePassword(u.getPassword()));
+        u.setAbsolutePath(User.DEFAULT_HEAD_ABSOLUTE_PATH);
+        u.setRelativePath(User.DEFAULT_HEAD_RELATIVE_PATH);
+
         request.getSession().setAttribute("registerUser", u);
         request.getSession().setAttribute("avtivateCode", avtivateCode);
         System.out.println(request.getSession().getAttribute("avtivateCode"));

@@ -7,7 +7,6 @@ package com.vicky.common.utils.controller;
 
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
-import com.vicky.modules.usermgr.entity.User;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
