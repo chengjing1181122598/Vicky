@@ -37,53 +37,53 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("user")
 public class UserController extends EntityController<User, String> {
-
+    
     @Autowired
     private HttpServletRequest request;
-
+    
     private User getUser() {
         return (User) request.getSession().getAttribute("user");
     }
-
+    
     @Autowired
     private UserService userService;
-
+    
     @Override
     protected BaseService<User, String> getBaseService() {
         return this.userService;
     }
-
+    
     public User getProtectedUser(User user) throws CloneNotSupportedException {
         User returnUser = (User) user.clone();
         returnUser.setPassword(null);
         return returnUser;
     }
-
+    
     @RequestMapping("updateHead")
     @ResponseBody
     public StatusMsg updateHead(@RequestParam(value = "headImage") MultipartFile file) throws IOException, CloneNotSupportedException {
         User user = this.getUser();
         file.getInputStream().available();
-
+        
         String[] paths = WebFileUtils.savePublicFileAtOtherServer(file,
                 Final.SERVER_PATH, Final.WEB_ROOT_PATH, Final.IMAGE_PATH, user.getUsername());
-
+        
         if (!user.getAbsolutePath().equals(User.DEFAULT_HEAD_ABSOLUTE_PATH)) {
             File frontHeadImage = new File(user.getAbsolutePath());
             frontHeadImage.delete();
         }
-
+        
         user.setAbsolutePath(paths[0]);
         user.setRelativePath(paths[1]);
-
+        
         this.userService.updateSelective(user);
-
+        
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改头像成功");
         statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(user));
         return statusMsg;
     }
-
+    
     @RequestMapping("logout")
     @ResponseBody
     public StatusMsg logout(HttpServletRequest request) {
@@ -92,7 +92,7 @@ public class UserController extends EntityController<User, String> {
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "用户退出成功");
         return statusMsg;
     }
-
+    
     @RequestMapping("update")
     @ResponseBody
     public StatusMsg update(HttpServletRequest request, User updateUser) throws StatusMsgException, CloneNotSupportedException {
@@ -104,13 +104,13 @@ public class UserController extends EntityController<User, String> {
             user.setSignature(updateUser.getSignature());
         }
         this.userService.updateSelective(user);
-
+        
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改信息成功");
         statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(user));
         return statusMsg;
     }
-
+    
     @RequestMapping("updatePWD")
     @ResponseBody
     public StatusMsg updatePWD(HttpServletRequest request, String frontPWD, String afterPWD) throws StatusMsgException {
@@ -125,7 +125,7 @@ public class UserController extends EntityController<User, String> {
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改密码成功");
         return statusMsg;
     }
-
+    
     @Override
     @RequestMapping("getById")
     @ResponseBody
@@ -135,7 +135,7 @@ public class UserController extends EntityController<User, String> {
         statusMsg.getMessage().put(StatusMsg.ENTITY, user);
         return statusMsg;
     }
-
+    
     @RequestMapping("getUser")
     @ResponseBody
     public StatusMsg getUser(HttpServletRequest request) throws CloneNotSupportedException, StatusMsgException {
@@ -146,7 +146,7 @@ public class UserController extends EntityController<User, String> {
         statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(this.getUser()));
         return statusMsg;
     }
-
+    
     @RequestMapping("login")
     @ResponseBody
     public StatusMsg login(HttpServletRequest request, HttpServletResponse response, User paramUser) throws Exception {
@@ -168,7 +168,7 @@ public class UserController extends EntityController<User, String> {
         statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(user));
         return statusMsg;
     }
-
+    
     @RequestMapping("finishRegister")
     @ResponseBody
     public StatusMsg prepareRegister(HttpServletRequest request, String activateCode) throws Exception {
@@ -184,7 +184,7 @@ public class UserController extends EntityController<User, String> {
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "用户激活成功!");
         return statusMsg;
     }
-
+    
     @RequestMapping("prepareRegister")
     @ResponseBody
     public StatusMsg prepareRegister(HttpServletRequest request, User u) throws Exception {
@@ -199,17 +199,17 @@ public class UserController extends EntityController<User, String> {
         if (this.userService.selectOne(queryUser) != null) {
             throw new StatusMsgException("该邮箱已注册");
         }
-
+        
         String avtivateCode = (int) (Math.random() * 900000 + 100000) + "";
         Mail activateMail = new ActivateMail(email, avtivateCode);
         SendEmailable sendEmailable = new SendEmailImpl();
         sendEmailable.send(activateMail);
-
+        
         u.setCreateTime(new Date());
         u.setPassword(EncodePassword.encodePassword(u.getPassword()));
         u.setAbsolutePath(User.DEFAULT_HEAD_ABSOLUTE_PATH);
         u.setRelativePath(User.DEFAULT_HEAD_RELATIVE_PATH);
-
+        
         request.getSession().setAttribute("registerUser", u);
         request.getSession().setAttribute("avtivateCode", avtivateCode);
         System.out.println(request.getSession().getAttribute("avtivateCode"));
@@ -217,5 +217,5 @@ public class UserController extends EntityController<User, String> {
         statusMsg.getMessage().put(StatusMsg.MESSAGE, "发送邮件成功,请前往邮箱获取验证码!");
         return statusMsg;
     }
-
+    
 }
