@@ -5,9 +5,9 @@
  */
 package com.vicky.modules.usermgr.controller;
 
+import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.finalpackage.Final;
 import com.vicky.common.utils.DealFile.WebFileUtils;
-import com.vicky.common.utils.controller.EntityController;
 import com.vicky.common.utils.encodepwd.EncodePassword;
 import com.vicky.common.utils.sendemail.Mail;
 import com.vicky.common.utils.sendemail.SendEmailImpl;
@@ -36,14 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Controller
 @RequestMapping("user")
-public class UserController extends EntityController<User, String> {
-
-    @Autowired
-    private HttpServletRequest request;
-
-    private User getUser() {
-        return (User) request.getSession().getAttribute("user");
-    }
+public class UserController extends MyEntityController<User, String> {
 
     @Autowired
     private UserService userService;

@@ -5,12 +5,11 @@
  */
 package com.vicky.modules.messagemgr.controller;
 
-import com.vicky.common.utils.controller.EntityController;
+import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.modules.messagemgr.entity.Message;
 import com.vicky.modules.messagemgr.service.MessageService;
-import com.vicky.modules.usermgr.entity.User;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,17 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("message")
-public class MessageController extends EntityController<Message, String> {
+public class MessageController extends MyEntityController<Message, String> {
 
     @Autowired
     private MessageService messageService;
-
-    @Autowired
-    private HttpServletRequest request;
-
-    private User getUser() {
-        return (User) request.getSession().getAttribute("user");
-    }
 
     @Override
     protected BaseService<Message, String> getBaseService() {

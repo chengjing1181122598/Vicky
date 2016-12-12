@@ -5,15 +5,14 @@
  */
 package com.vicky.modules.videomgr.controller;
 
+import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.finalpackage.Final;
 import com.vicky.common.utils.DealFile.WebFileUtils;
-import com.vicky.common.utils.controller.EntityController;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
 import com.vicky.modules.messagemgr.entity.Message;
 import com.vicky.modules.messagemgr.service.MessageService;
-import com.vicky.modules.usermgr.entity.User;
 import com.vicky.modules.videomgr.entity.Video;
 import com.vicky.modules.videomgr.entity.VideoCheck;
 import com.vicky.modules.videomgr.service.VideoCheckService;
@@ -37,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Controller
 @RequestMapping("videoCheck")
-public class VideoCheckController extends EntityController<VideoCheck, String> {
+public class VideoCheckController extends MyEntityController<VideoCheck, String> {
 
     @Autowired
     private VideoCheckService checkService;
@@ -45,13 +44,6 @@ public class VideoCheckController extends EntityController<VideoCheck, String> {
     private VideoService videoService;
     @Autowired
     private MessageService messageService;
-
-    @Autowired
-    private HttpServletRequest request;
-
-    private User getUser() {
-        return (User) request.getSession().getAttribute("user");
-    }
 
     @Override
     protected BaseService<VideoCheck, String> getBaseService() {

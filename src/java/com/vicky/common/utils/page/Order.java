@@ -54,7 +54,9 @@ public class Order {
         }
         String[] types = request.getParameterValues(Order.ORDER_TYPE);
         for (int i = 0; i < propertys.length; i++) {
-            if (!types[i].equals(Order.ASC) || !types[i].equals(Order.DESC)) {
+            System.out.println(types[i].equals(Order.ASC));
+            System.out.println(types[i].equals(Order.DESC));
+            if (!types[i].equals(Order.ASC) && !types[i].equals(Order.DESC)) {
                 throw new StatusMsgException("排序只能是asc或者desc,当前排序为：" + types[i]);
             }
             Order order = new Order();

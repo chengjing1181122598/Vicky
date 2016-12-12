@@ -5,13 +5,12 @@
  */
 package com.vicky.modules.videomgr.controller;
 
+import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.DealFile.WebFileUtils;
-import com.vicky.common.utils.controller.EntityController;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.modules.messagemgr.entity.Message;
 import com.vicky.modules.messagemgr.service.MessageService;
-import com.vicky.modules.usermgr.entity.User;
 import com.vicky.modules.videomgr.entity.Video;
 import com.vicky.modules.videomgr.service.VideoService;
 import com.vicky.modules.videomgr.utils.MessageBuild;
@@ -29,19 +28,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("video")
-public class VideoController extends EntityController<Video, String> {
+public class VideoController extends MyEntityController<Video, String> {
 
     @Autowired
     private VideoService videoService;
     @Autowired
     private MessageService messageService;
-
-    @Autowired
-    private HttpServletRequest request;
-
-    private User getUser() {
-        return (User) request.getSession().getAttribute("user");
-    }
 
     @Override
     protected BaseService<Video, String> getBaseService() {
@@ -60,7 +52,7 @@ public class VideoController extends EntityController<Video, String> {
     @RequestMapping("deleteById")
     public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, String primaryKey) throws Exception {
         Video video = this.videoService.selectByPrimaryKey(primaryKey);
-        if (request.getSession().getAttribute("manager") != null) {
+        if (this.getManager() != null) {
             String reason = request.getParameter("reason");
             Message message = MessageBuild.deleteMessage(video.getVideoTitle(), reason);
             message.setUsername(video.getUsername());

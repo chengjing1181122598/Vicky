@@ -5,7 +5,7 @@
  */
 package com.vicky.modules.videomgr.controller;
 
-import com.vicky.common.utils.controller.EntityController;
+import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("videoModule")
-public class VideoModuleController extends EntityController<VideoModule, String> {
+public class VideoModuleController extends MyEntityController<VideoModule, String> {
 
     @Autowired
     private VideoModuleService moduleService;

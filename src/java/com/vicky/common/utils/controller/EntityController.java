@@ -7,7 +7,6 @@ package com.vicky.common.utils.controller;
 
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
-import java.io.Serializable;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @param <T>
  * @param <PrimaryKey>
  */
-public abstract class EntityController<T, PrimaryKey extends Serializable> extends BaseController {
+public abstract class EntityController<T, PrimaryKey> extends BaseController {
 
     /**
      * BaseService,子类必须实现该方法注入bean

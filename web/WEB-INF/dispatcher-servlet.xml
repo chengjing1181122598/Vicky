@@ -35,6 +35,7 @@
             <mvc:mapping path="/user/updateHead"/>
             <mvc:mapping path="/vedioCheck/save"/>
             <mvc:mapping path="/message/deleteById"/>
+            <mvc:mapping path="/collectUser/**"/>
             <bean class="com.vicky.modules.usermgr.interceptor.UserInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @param <T>
  * @param <PrimaryKey>
  */
-public interface BaseService<T, PrimaryKey extends Serializable> {
+public interface BaseService<T, PrimaryKey> {
 
     public static final String TOTAL_KEY = "total";//map键：分页查询总共多少条
     public static final String DATA_KEY = "data";//map键：分页查询List数据

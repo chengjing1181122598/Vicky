@@ -29,7 +29,7 @@ import tk.mybatis.mapper.entity.Example;
  * @param <T>
  * @param <PrimaryKey>
  */
-public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> implements BaseService<T, PrimaryKey> {
+public abstract class MybatisBaseService<T, PrimaryKey> implements BaseService<T, PrimaryKey> {
 
     /**
      * 注入Mapper,子类必须实现该方法注入bean
@@ -259,7 +259,7 @@ public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> imp
      * @see tk.mybatis.mapper.common.Mapper#deleteByPrimaryKey
      */
     @Override
-    public void deleteById(PrimaryKey id){
+    public void deleteById(PrimaryKey id) {
         this.selectByPrimaryKey(id);
         this.getMapper().deleteByPrimaryKey(id);
     }
