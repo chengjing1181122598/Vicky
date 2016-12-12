@@ -52,8 +52,13 @@ public class UserController extends EntityController<User, String> {
     protected BaseService<User, String> getBaseService() {
         return this.userService;
     }
+<<<<<<< HEAD
     
     public User getProtectedUser(User user) throws CloneNotSupportedException {
+=======
+
+    protected User getProtectedUser(User user) throws CloneNotSupportedException {
+>>>>>>> f91476dcdb43f9204fefc87d975b50a5ed7f72d0
         User returnUser = (User) user.clone();
         returnUser.setPassword(null);
         return returnUser;
@@ -139,9 +144,6 @@ public class UserController extends EntityController<User, String> {
     @RequestMapping("getUser")
     @ResponseBody
     public StatusMsg getUser(HttpServletRequest request) throws CloneNotSupportedException, StatusMsgException {
-        if (this.getUser() == null) {
-            throw new StatusMsgException("用户没有登录");
-        }
         StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
         statusMsg.getMessage().put(StatusMsg.ENTITY, this.getProtectedUser(this.getUser()));
         return statusMsg;

@@ -64,8 +64,7 @@ public class BaseController {
             this.getLogger().error("getMessage：" + exception.getMessage());
             this.getLogger().error("exception：", exception);
         }
-        StatusMsg statusMsg = new StatusMsg();
-        statusMsg.setStatus(StatusMsg.ERROR);
+        StatusMsg statusMsg = new StatusMsg(StatusMsg.ERROR);
         statusMsg.getMessage().put("toString", exception.toString());
         statusMsg.getMessage().put(StatusMsg.MESSAGE, exception.getMessage());
         return statusMsg;

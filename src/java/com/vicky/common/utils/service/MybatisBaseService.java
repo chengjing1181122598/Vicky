@@ -256,11 +256,10 @@ public abstract class MybatisBaseService<T, PrimaryKey extends Serializable> imp
      * 删除实体
      * <p>
      * @param id 实体ID
-     * @throws java.lang.Exception
      * @see tk.mybatis.mapper.common.Mapper#deleteByPrimaryKey
      */
     @Override
-    public void deleteById(PrimaryKey id) throws Exception {
+    public void deleteById(PrimaryKey id){
         this.selectByPrimaryKey(id);
         this.getMapper().deleteByPrimaryKey(id);
     }

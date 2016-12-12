@@ -5,8 +5,6 @@ DROP DATABASE IF EXISTS VICKY;
 CREATE DATABASE VICKY;
 USE VICKY;
 
-SET FOREIGN_KEY_CHECKS=0;
-
 /*==============================================================*/
 /* 预处理                                                       */
 /*==============================================================*/
@@ -16,17 +14,17 @@ drop index collect_user_table_collecting_user_index on collect_user;
 
 drop table if exists collect_user;
 
-drop index collect_vedio_table_vedio_id_index on collect_vedio;
+drop index collect_video_table_vedio_id_index on collect_video;
 
-drop index collect_vedio_table_collecting_user_index on collect_vedio;
+drop index collect_video_table_collecting_user_index on collect_video;
 
-drop table if exists collect_vedio;
+drop table if exists collect_video;
 
 drop index comment_floor_table_floor_number_index on comment_floor;
 
 drop index comment_floor_table_create_time_index on comment_floor;
 
-drop index comment_floor_table_vedio_id_index on comment_floor;
+drop index comment_floor_table_video_id_index on comment_floor;
 
 drop table if exists comment_floor;
 
@@ -36,39 +34,45 @@ drop index comment_reply_floor_id_index on comment_reply;
 
 drop table if exists comment_reply;
 
+drop index message_table_status_index on message;
+
+drop index message_table_create_time_index on message;
+
+drop index message_table_username_index on message;
+
+drop table if exists message;
+
 drop index user_table_email_index on user;
 
 drop table if exists user;
 
-drop table if exists user_head;
+drop index video_table_create_time_index on video;
 
-drop index vedio_table_create_time_index on vedio;
+drop index video_table_username_index on video;
 
-drop index vedio_table_username_index on vedio;
+drop index video_table_module_name_index on video;
 
-drop index vedio_table_module_name_index on vedio;
+drop index video_table_video_title_index on video;
 
-drop index vedio_table_vedio_title_index on vedio;
+drop table if exists video;
 
-drop table if exists vedio;
+drop index video_check_table_create_time_index on video_check;
 
-drop index vedio_check_table_create_time_index on vedio_check;
+drop index video_check_table_username_index on video_check;
 
-drop index vedio_check_table_username_index on vedio_check;
+drop index video_check_table_module_name_index on video_check;
 
-drop index vedio_check_table_module_name_index on vedio_check;
+drop index video_check_table_video_title_index on video_check;
 
-drop index vedio_check_table_vedio_title_index on vedio_check;
+drop table if exists video_check;
 
-drop table if exists vedio_check;
+drop index video_like_table_video_id_index on video_like;
 
-drop index vedio_like_table_vedio_id_index on vedio_like;
+drop index video_like_table_username_index on video_like;
 
-drop index vedio_like_table_username_index on vedio_like;
+drop table if exists video_like;
 
-drop table if exists vedio_like;
-
-drop table if exists vedio_module;
+drop table if exists video_module;
 
 /*==============================================================*/
 /* Table: collect_user                                          */
@@ -81,7 +85,7 @@ create table collect_user
    create_time          datetime not null comment '收藏时间',
    primary key (collect_user_id),
    unique key AK_ing_ed_user_unique (collecting_username, collected_username)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 alter table collect_user comment '用户收藏用户表';
 
@@ -102,36 +106,36 @@ create index collect_user_table_collected_user_index on collect_user
 );
 
 /*==============================================================*/
-/* Table: collect_vedio                                         */
+/* Table: collect_video                                         */
 /*==============================================================*/
-create table collect_vedio
+create table collect_video
 (
-   collect_vedio_id     varchar(255) not null comment '收藏视频表主键，java UUID',
+   collect_video_id     varchar(255) not null comment '收藏视频表主键，java UUID',
    collecting_username  varchar(255) not null comment '收藏用户名',
-   vedio_id             varchar(255) not null comment '被收藏视频主键',
+   video_id             varchar(255) not null comment '被收藏视频主键',
    create_time          datetime not null comment '收藏时间',
-   vedio_title          varchar(255) not null comment '视频标题',
+   video_title          varchar(255) not null comment '视频标题',
    cover_relative_path  varchar(255) not null comment '视频封面图片文件相对路径',
-   primary key (collect_vedio_id),
-   unique key AK_user_vedio_id_unique (collecting_username, vedio_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   primary key (collect_video_id),
+   unique key AK_user_vedio_id_unique (collecting_username, video_id)
+);
 
-alter table collect_vedio comment '用户收藏视频表';
+alter table collect_video comment '用户收藏视频表';
 
 /*==============================================================*/
-/* Index: collect_vedio_table_collecting_user_index             */
+/* Index: collect_video_table_collecting_user_index             */
 /*==============================================================*/
-create index collect_vedio_table_collecting_user_index on collect_vedio
+create index collect_video_table_collecting_user_index on collect_video
 (
    collecting_username
 );
 
 /*==============================================================*/
-/* Index: collect_vedio_table_vedio_id_index                    */
+/* Index: collect_video_table_vedio_id_index                    */
 /*==============================================================*/
-create index collect_vedio_table_vedio_id_index on collect_vedio
+create index collect_video_table_vedio_id_index on collect_video
 (
-   vedio_id
+   video_id
 );
 
 /*==============================================================*/
@@ -143,19 +147,19 @@ create table comment_floor
    username             varchar(255) not null comment '评论用户名',
    content              text not null comment '评论内容，text长字段',
    create_time          datetime not null comment '发表评论的时间',
-   vedio_id             varchar(255) not null comment '评论所属视频ID',
+   video_id             varchar(255) not null comment '评论所属视频ID',
    floor_number         int not null comment '楼层序号，自增',
    primary key (floor_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 alter table comment_floor comment '视频评论区的楼层';
 
 /*==============================================================*/
-/* Index: comment_floor_table_vedio_id_index                    */
+/* Index: comment_floor_table_video_id_index                    */
 /*==============================================================*/
-create index comment_floor_table_vedio_id_index on comment_floor
+create index comment_floor_table_video_id_index on comment_floor
 (
-   vedio_id
+   video_id
 );
 
 /*==============================================================*/
@@ -186,7 +190,7 @@ create table comment_reply
    create_time          datetime not null comment '回复时间',
    floor_id             varchar(255) not null comment '回复所属楼层',
    primary key (reply_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 alter table comment_reply comment '评论楼层回复表';
 
@@ -207,6 +211,46 @@ create index comment_reply_create_time_index on comment_reply
 );
 
 /*==============================================================*/
+/* Table: message                                               */
+/*==============================================================*/
+create table message
+(
+   message_id           varchar(255) not null comment '主键',
+   username             varchar(255) not null comment '消息所属用户',
+   message_title        varchar(255) not null comment '消息标题',
+   content              varchar(255) not null comment '消息内容',
+   create_time          datetime not null comment '消息创建时间',
+   status               varchar(3) not null comment '消息状态，“001”表示未读，“002”表示已读',
+   primary key (message_id)
+);
+
+alter table message comment '用户通知消息表';
+
+/*==============================================================*/
+/* Index: message_table_username_index                          */
+/*==============================================================*/
+create index message_table_username_index on message
+(
+   username
+);
+
+/*==============================================================*/
+/* Index: message_table_create_time_index                       */
+/*==============================================================*/
+create index message_table_create_time_index on message
+(
+   create_time
+);
+
+/*==============================================================*/
+/* Index: message_table_status_index                            */
+/*==============================================================*/
+create index message_table_status_index on message
+(
+   status
+);
+
+/*==============================================================*/
 /* Table: user                                                  */
 /*==============================================================*/
 create table user
@@ -221,7 +265,7 @@ create table user
    image_absolute_path  varchar(255) not null comment '用户头像图片文件绝对路径',
    primary key (username),
    unique key AK_user_email_unique_key (email)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
 alter table user comment '用户表，包含用户的基本信息';
 
@@ -233,163 +277,164 @@ create index user_table_email_index on user
    email
 );
 
-
 /*==============================================================*/
-/* Table: vedio                                                 */
+/* Table: video                                                 */
 /*==============================================================*/
-create table vedio
+create table video
 (
-   vedio_id             varchar(255) not null comment '视频主键，java UUID',
-   module_name          varchar(255) comment '所属模块名字',
+   video_id             varchar(255) not null comment '视频主键，java UUID',
+   module_id            varchar(255) comment '所属模块',
    absolute_path        varchar(255) not null comment '视频文件绝对路径',
    relative_path        varchar(255) not null comment '视频文件相对路径',
-   vedio_name           varchar(255) not null comment '视频名字',
-   vedio_title          varchar(255) not null comment '视频标题',
+   video_name           varchar(255) not null comment '视频名字',
+   video_title          varchar(255) not null comment '视频标题',
    username             varchar(255) not null comment '投稿视频的用户名',
    create_time          datetime not null comment '视频投稿时间',
    cover_absolute_path  varchar(255) not null comment '视频封面图片文件绝对路径',
    cover_relative_path  varchar(255) not null comment '图片封面图片文件相对路径',
-   vedio_explain        varchar(255) not null comment '视频说明',
-   primary key (vedio_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   video_explain        varchar(255) not null comment '视频说明',
+   primary key (video_id)
+);
 
-alter table vedio comment '视频表';
+alter table video comment '视频表';
 
 /*==============================================================*/
-/* Index: vedio_table_vedio_title_index                         */
+/* Index: video_table_video_title_index                         */
 /*==============================================================*/
-create index vedio_table_vedio_title_index on vedio
+create index video_table_video_title_index on video
 (
-   vedio_title
+   video_title
 );
 
 /*==============================================================*/
-/* Index: vedio_table_module_name_index                         */
+/* Index: video_table_module_name_index                         */
 /*==============================================================*/
-create index vedio_table_module_name_index on vedio
+create index video_table_module_name_index on video
 (
-   module_name
+   
 );
 
 /*==============================================================*/
-/* Index: vedio_table_username_index                            */
+/* Index: video_table_username_index                            */
 /*==============================================================*/
-create index vedio_table_username_index on vedio
+create index video_table_username_index on video
 (
    username
 );
 
 /*==============================================================*/
-/* Index: vedio_table_create_time_index                         */
+/* Index: video_table_create_time_index                         */
 /*==============================================================*/
-create index vedio_table_create_time_index on vedio
+create index video_table_create_time_index on video
 (
    create_time
 );
 
 /*==============================================================*/
-/* Table: vedio_check                                           */
+/* Table: video_check                                           */
 /*==============================================================*/
-create table vedio_check
+create table video_check
 (
-   vedio_id             varchar(255) not null comment '视频主键，java UUID',
-   module_name          varchar(255) comment '所属模块名字',
+   video_id             varchar(255) not null comment '视频主键，java UUID',
+   module_id            varchar(255) comment '所属模块主键',
    absolute_path        varchar(255) not null comment '视频文件绝对路径',
    relative_path        varchar(255) not null comment '视频文件相对路径',
-   vedio_name           varchar(255) not null comment '视频名字',
-   vedio_title          varchar(255) not null comment '视频标题',
+   video_name           varchar(255) not null comment '视频名字',
+   video_title          varchar(255) not null comment '视频标题',
    username             varchar(255) not null comment '投稿视频的用户名',
    create_time          datetime not null comment '视频投稿时间',
    cover_absolute_path  varchar(255) not null comment '视频封面图片文件绝对路径',
    cover_relative_path  varchar(255) not null comment '图片封面图片文件相对路径',
-   vedio_explain        varchar(255) not null comment '视频说明',
-   primary key (vedio_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   video_explain        varchar(255) not null comment '视频说明',
+   primary key (video_id)
+);
 
-alter table vedio_check comment '视频审核表，视频审核通过后，记录就会插入视频表，同时本表记录被删除';
+alter table video_check comment '视频审核表，视频审核通过后，记录就会插入视频表，同时本表记录被删除';
 
 /*==============================================================*/
-/* Index: vedio_check_table_vedio_title_index                   */
+/* Index: video_check_table_video_title_index                   */
 /*==============================================================*/
-create index vedio_check_table_vedio_title_index on vedio_check
+create index video_check_table_video_title_index on video_check
 (
-   vedio_title
+   video_title
 );
 
 /*==============================================================*/
-/* Index: vedio_check_table_module_name_index                   */
+/* Index: video_check_table_module_name_index                   */
 /*==============================================================*/
-create index vedio_check_table_module_name_index on vedio_check
+create index video_check_table_module_name_index on video_check
 (
-   module_name
+   
 );
 
 /*==============================================================*/
-/* Index: vedio_check_table_username_index                      */
+/* Index: video_check_table_username_index                      */
 /*==============================================================*/
-create index vedio_check_table_username_index on vedio_check
+create index video_check_table_username_index on video_check
 (
    username
 );
 
 /*==============================================================*/
-/* Index: vedio_check_table_create_time_index                   */
+/* Index: video_check_table_create_time_index                   */
 /*==============================================================*/
-create index vedio_check_table_create_time_index on vedio_check
+create index video_check_table_create_time_index on video_check
 (
    create_time
 );
 
 /*==============================================================*/
-/* Table: vedio_like                                            */
+/* Table: video_like                                            */
 /*==============================================================*/
-create table vedio_like
+create table video_like
 (
-   vedio_like_id        varchar(255) not null comment '点赞Id，java UUID',
+   video_like_id        varchar(255) not null comment '点赞Id，java UUID',
    username             varchar(255) not null comment '点赞的用户名',
-   vedio_id             varchar(255) not null comment '被点赞的视频Id',
+   video_id             varchar(255) not null comment '被点赞的视频Id',
    cover_relative_path  varchar(255) not null comment '被点赞视频封面图片文件相对路径',
-   vedio_title          varchar(255) not null comment '被点赞视频标题',
+   video_title          varchar(255) not null comment '被点赞视频标题',
    like_time            datetime not null comment '点赞时间',
-   primary key (vedio_like_id),
-   unique key AK_username_vedio_unique (username, vedio_id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   primary key (video_like_id),
+   unique key AK_username_vedio_unique (username, video_id)
+);
 
-alter table vedio_like comment '视频点赞表';
+alter table video_like comment '视频点赞表';
 
 /*==============================================================*/
-/* Index: vedio_like_table_username_index                       */
+/* Index: video_like_table_username_index                       */
 /*==============================================================*/
-create index vedio_like_table_username_index on vedio_like
+create index video_like_table_username_index on video_like
 (
    username
 );
 
 /*==============================================================*/
-/* Index: vedio_like_table_vedio_id_index                       */
+/* Index: video_like_table_video_id_index                       */
 /*==============================================================*/
-create index vedio_like_table_vedio_id_index on vedio_like
+create index video_like_table_video_id_index on video_like
 (
-   vedio_id
+   video_id
 );
 
 /*==============================================================*/
-/* Table: vedio_module                                          */
+/* Table: video_module                                          */
 /*==============================================================*/
-create table vedio_module
+create table video_module
 (
+   module_id            varchar(255) not null comment '视频模块主键',
    module_name          varchar(255) not null comment '模块名字',
    create_time          date not null comment '模块创建时间',
-   primary key (module_name)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   primary key (module_id),
+   unique key AK_vedio_mudule_name_unique (module_name)
+);
 
-alter table vedio_module comment '视频模块表';
+alter table video_module comment '视频模块表';
 
 alter table comment_reply add constraint FK_Reference_3 foreign key (floor_id)
       references comment_floor (floor_id) on delete restrict on update restrict;
 
-alter table vedio add constraint FK_Reference_1 foreign key (module_name)
-      references vedio_module (module_name) on delete restrict on update restrict;
+alter table video add constraint FK_Reference_1 foreign key (module_id)
+      references video_module (module_id) on delete restrict on update restrict;
 
-alter table vedio_check add constraint FK_Reference_2 foreign key (module_name)
-      references vedio_module (module_name) on delete restrict on update restrict;
+alter table video_check add constraint FK_Reference_2 foreign key (module_id)
+      references video_module (module_id) on delete restrict on update restrict;

@@ -26,6 +26,28 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+    
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/user/getUser"/>
+            <mvc:mapping path="/user/updatePWD"/>
+            <mvc:mapping path="/user/update"/>
+            <mvc:mapping path="/user/updateHead"/>
+            <mvc:mapping path="/vedioCheck/save"/>
+            <mvc:mapping path="/message/deleteById"/>
+            <bean class="com.vicky.modules.usermgr.interceptor.UserInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/videomodule/updateById"/>
+            <mvc:mapping path="/videomodule/save"/>
+            <mvc:mapping path="/videoCheck/getPageData"/>
+            <mvc:mapping path="/videoCheck/pass"/>
+            <mvc:mapping path="/videoCheck/notPass"/>
+            <mvc:mapping path="/message/save"/>
+            <bean class="com.vicky.modules.videomgr.interceptor.ManagerInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
     <mvc:default-servlet-handler/>
     
     <bean id="viewResolver"
