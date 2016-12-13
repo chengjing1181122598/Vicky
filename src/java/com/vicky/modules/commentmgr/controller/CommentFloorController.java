@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.vicky.modules.collectmgr.controller;
+package com.vicky.modules.commentmgr.controller;
 
 import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.page.Page;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
-import com.vicky.modules.collectmgr.entity.CollectUser;
-import com.vicky.modules.collectmgr.service.CollectUserService;
+import com.vicky.modules.commentmgr.entity.CommentFloor;
+import com.vicky.modules.commentmgr.service.CommentFloorService;
+import com.vicky.modules.usermgr.entity.User;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,20 +30,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Administrator
  */
 @Controller
-@RequestMapping("collectUser")
-public class CollectUserController extends MyEntityController<CollectUser, String> {
+@RequestMapping("commentFloor")
+public class CommentFloorController extends MyEntityController<CommentFloor, String> {
 
     @Autowired
-    private CollectUserService collectUserService;
+    private CommentFloorService floorService;
 
     @Override
-    protected BaseService<CollectUser, String> getBaseService() {
-        return this.collectUserService;
+    protected BaseService<CommentFloor, String> getBaseService() {
+        return this.floorService;
     }
 
     @RequestMapping("getAll")
     @ResponseBody
-    public Map<String, Object> getAll(String username, Integer pageIndex, Integer pageSize) {
+    public Map<String, Object> getAll(String videoId, Integer pageIndex, Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
         int index = Page.DEFAULT_PAGE_INDEX;
         int limit = Page.DEFAULT_PAGE_SIZE;
@@ -53,8 +54,8 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
             limit = pageSize;
         }
         RowBounds rowBounds = new RowBounds((index - 1) * limit, limit);
-        int total = this.collectUserService.getAllCount(username);
-        List<Map<String, Object>> maps = this.collectUserService.getAll(username, rowBounds);
+        int total = this.floorService.getAllCount(videoId);
+        List<Map<String, Object>> maps = this.floorService.getAll(videoId, rowBounds);
         map.put(Page.TOTAL_KEY, total);
         map.put(Page.DATA_KEY, maps);
         return map;
@@ -64,19 +65,21 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
     @RequestMapping("deleteById")
     @ResponseBody
     public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, String primaryKey) throws Exception {
-        CollectUser collectUser = this.collectUserService.selectByPrimaryKey(primaryKey);
-        if (!collectUser.getCollectingUsername().equals(super.getUser().getUsername())) {
+        CommentFloor commentFloor = this.floorService.selectByPrimaryKey(primaryKey);
+        if (!commentFloor.getUsername().equals(super.getUser().getUsername())) {
             throw new StatusMsgException("权限不够");
         }
-        return super.deleteById(request, response, primaryKey); //To change body of generated methods, choose Tools | Templates.
+        return super.deleteById(request, response, primaryKey);
     }
 
     @Override
     @RequestMapping("save")
     @ResponseBody
-    public StatusMsg save(HttpServletRequest request, HttpServletResponse response, CollectUser t) throws Exception {
-        t.setCollectingUsername(super.getUser().getUsername());
+    public StatusMsg save(HttpServletRequest request, HttpServletResponse response, CommentFloor t) throws Exception {
+        User user = super.getUser();
         t.setCreateTime(new Date());
+        t.setUsername(user.getUsername());
+
         return super.save(request, response, t); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class Page {
 
+    public static final String TOTAL_KEY = "total";//map键：分页查询总共多少条
+    public static final String DATA_KEY = "data";//map键：分页查询List数据
+
     public static final int DEFAULT_PAGE_SIZE = 10;
     public static final int DEFAULT_PAGE_INDEX = 1;
     public static final String DEFAULT_HTTP_REQUEST_PAGE_SIZE_PARAM_NAME = "pageSize";

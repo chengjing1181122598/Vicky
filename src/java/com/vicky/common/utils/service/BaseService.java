@@ -5,7 +5,6 @@
  */
 package com.vicky.common.utils.service;
 
-import java.io.Serializable;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,9 +16,6 @@ import javax.servlet.http.HttpServletRequest;
  * @param <PrimaryKey>
  */
 public interface BaseService<T, PrimaryKey> {
-
-    public static final String TOTAL_KEY = "total";//map键：分页查询总共多少条
-    public static final String DATA_KEY = "data";//map键：分页查询List数据
 
     public T selectByPrimaryKey(PrimaryKey primaryKey);
 

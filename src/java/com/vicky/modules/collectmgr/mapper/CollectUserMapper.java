@@ -6,6 +6,9 @@
 package com.vicky.modules.collectmgr.mapper;
 
 import com.vicky.modules.collectmgr.entity.CollectUser;
+import java.util.List;
+import java.util.Map;
+import org.apache.ibatis.session.RowBounds;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -14,4 +17,7 @@ import tk.mybatis.mapper.common.Mapper;
  */
 public interface CollectUserMapper extends Mapper<CollectUser> {
 
+    public List<Map<String, Object>> getAll(String username, RowBounds rowBounds);
+
+    public int getAllCount(String username);
 }

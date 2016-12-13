@@ -32,4 +32,5 @@ public class UserService extends MybatisBaseService<User, String> {
         user.setPassword(null);
         return user;
     }
+    
 }

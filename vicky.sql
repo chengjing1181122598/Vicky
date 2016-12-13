@@ -28,12 +28,6 @@ drop index comment_floor_table_video_id_index on comment_floor;
 
 drop table if exists comment_floor;
 
-drop index comment_reply_create_time_index on comment_reply;
-
-drop index comment_reply_floor_id_index on comment_reply;
-
-drop table if exists comment_reply;
-
 drop index message_table_status_index on message;
 
 drop index message_table_create_time_index on message;
@@ -65,12 +59,6 @@ drop index video_check_table_module_name_index on video_check;
 drop index video_check_table_video_title_index on video_check;
 
 drop table if exists video_check;
-
-drop index video_like_table_video_id_index on video_like;
-
-drop index video_like_table_username_index on video_like;
-
-drop table if exists video_like;
 
 drop table if exists video_module;
 
@@ -111,13 +99,13 @@ create index collect_user_table_collected_user_index on collect_user
 create table collect_video
 (
    collect_video_id     varchar(255) not null comment '收藏视频表主键，java UUID',
-   collecting_username  varchar(255) not null comment '收藏用户名',
+   username             varchar(255) not null comment '收藏用户名',
    video_id             varchar(255) not null comment '被收藏视频主键',
    create_time          datetime not null comment '收藏时间',
    video_title          varchar(255) not null comment '视频标题',
    cover_relative_path  varchar(255) not null comment '视频封面图片文件相对路径',
    primary key (collect_video_id),
-   unique key AK_user_vedio_id_unique (collecting_username, video_id)
+   unique key AK_user_vedio_id_unique (username, video_id)
 );
 
 alter table collect_video comment '用户收藏视频表';
@@ -127,7 +115,7 @@ alter table collect_video comment '用户收藏视频表';
 /*==============================================================*/
 create index collect_video_table_collecting_user_index on collect_video
 (
-   collecting_username
+   username
 );
 
 /*==============================================================*/
@@ -148,7 +136,6 @@ create table comment_floor
    content              text not null comment '评论内容，text长字段',
    create_time          datetime not null comment '发表评论的时间',
    video_id             varchar(255) not null comment '评论所属视频ID',
-   floor_number         int not null comment '楼层序号，自增',
    primary key (floor_id)
 );
 
@@ -175,39 +162,7 @@ create index comment_floor_table_create_time_index on comment_floor
 /*==============================================================*/
 create index comment_floor_table_floor_number_index on comment_floor
 (
-   floor_number
-);
-
-/*==============================================================*/
-/* Table: comment_reply                                         */
-/*==============================================================*/
-create table comment_reply
-(
-   reply_id             varchar(255) not null comment '回复主键,java UUID',
-   front_username       varchar(255) not null comment '主动回复的用户名',
-   after_username       varchar(255) comment '被回复的用户名，为空意味着直接回复楼层',
-   content              text not null comment '回复内容，text长字段',
-   create_time          datetime not null comment '回复时间',
-   floor_id             varchar(255) not null comment '回复所属楼层',
-   primary key (reply_id)
-);
-
-alter table comment_reply comment '评论楼层回复表';
-
-/*==============================================================*/
-/* Index: comment_reply_floor_id_index                          */
-/*==============================================================*/
-create index comment_reply_floor_id_index on comment_reply
-(
-   floor_id
-);
-
-/*==============================================================*/
-/* Index: comment_reply_create_time_index                       */
-/*==============================================================*/
-create index comment_reply_create_time_index on comment_reply
-(
-   create_time
+   
 );
 
 /*==============================================================*/
@@ -384,39 +339,6 @@ create index video_check_table_create_time_index on video_check
 );
 
 /*==============================================================*/
-/* Table: video_like                                            */
-/*==============================================================*/
-create table video_like
-(
-   video_like_id        varchar(255) not null comment '点赞Id，java UUID',
-   username             varchar(255) not null comment '点赞的用户名',
-   video_id             varchar(255) not null comment '被点赞的视频Id',
-   cover_relative_path  varchar(255) not null comment '被点赞视频封面图片文件相对路径',
-   video_title          varchar(255) not null comment '被点赞视频标题',
-   like_time            datetime not null comment '点赞时间',
-   primary key (video_like_id),
-   unique key AK_username_vedio_unique (username, video_id)
-);
-
-alter table video_like comment '视频点赞表';
-
-/*==============================================================*/
-/* Index: video_like_table_username_index                       */
-/*==============================================================*/
-create index video_like_table_username_index on video_like
-(
-   username
-);
-
-/*==============================================================*/
-/* Index: video_like_table_video_id_index                       */
-/*==============================================================*/
-create index video_like_table_video_id_index on video_like
-(
-   video_id
-);
-
-/*==============================================================*/
 /* Table: video_module                                          */
 /*==============================================================*/
 create table video_module
@@ -430,11 +352,9 @@ create table video_module
 
 alter table video_module comment '视频模块表';
 
-alter table comment_reply add constraint FK_Reference_3 foreign key (floor_id)
-      references comment_floor (floor_id) on delete restrict on update restrict;
-
 alter table video add constraint FK_Reference_1 foreign key (module_id)
       references video_module (module_id) on delete restrict on update restrict;
 
 alter table video_check add constraint FK_Reference_2 foreign key (module_id)
       references video_module (module_id) on delete restrict on update restrict;
+

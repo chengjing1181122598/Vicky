@@ -8,6 +8,9 @@ package com.vicky.modules.collectmgr.service;
 import com.vicky.common.utils.service.MybatisBaseService;
 import com.vicky.modules.collectmgr.entity.CollectUser;
 import com.vicky.modules.collectmgr.mapper.CollectUserMapper;
+import java.util.List;
+import java.util.Map;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
@@ -18,13 +21,21 @@ import tk.mybatis.mapper.common.Mapper;
  */
 @Service
 public class CollectUserService extends MybatisBaseService<CollectUser, String> {
-
+    
     @Autowired
     private CollectUserMapper collectUserMapper;
-
+    
     @Override
     protected Mapper<CollectUser> getMapper() {
         return this.collectUserMapper;
     }
-
+    
+    public List<Map<String, Object>> getAll(String username, RowBounds rowBounds) {
+        return this.collectUserMapper.getAll(username, rowBounds);
+    }
+    
+    public int getAllCount(String username) {
+        return this.collectUserMapper.getAllCount(username);
+    }
+    
 }

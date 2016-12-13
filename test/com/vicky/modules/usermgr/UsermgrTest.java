@@ -5,9 +5,10 @@
  */
 package com.vicky.modules.usermgr;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Scanner;
+import com.vicky.modules.commentmgr.mapper.CommentFloorMapper;
+import java.util.List;
+import java.util.Map;
+import org.apache.ibatis.session.RowBounds;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,9 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration(locations = {"file:web/WEB-INF/applicationContext.xml", "file:web/WEB-INF/dispatcher-servlet.xml"})
 public class UsermgrTest {
 
+    @Autowired
+    private CommentFloorMapper commentFloorMapper;
+
     public UsermgrTest() {
     }
 
@@ -45,13 +49,19 @@ public class UsermgrTest {
 
     @Test
     public void test() throws Exception {
-        mockMvc.perform((post("/user/prepareRegister")
-                .param("username", "程景")
+//        RowBounds rowBounds = new RowBounds(1, 10);
+//        List<Map<String, Object>> maps = this.commentFloorMapper.getAll("1", rowBounds);
+//        for (Map<String, Object> map : maps) {
+//            System.out.println(map.get("createTime").getClass());
+//        }
+
+        mockMvc.perform((post("/commentFloor/getAll")
+                .param("videoId", "1")
                 .param("password", "5201314liweiqi")
                 .param("email", "1181122598@qq.com")
                 .param("condition_GT_D_birthday", "1994-10-10")
-                .param("pageSize", "10")
-                .param("pageIndex", "1")
+                .param("pageSize", "1")
+                .param("pageIndex", "2")
                 .param("order_property", "age")
                 .param("order_type", "asc")))
                 .andExpect(status().isOk()).andDo(print());

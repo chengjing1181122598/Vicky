@@ -27,8 +27,8 @@ public class CollectVideo implements Serializable {
     @Column(name = "collect_video_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "select uuid()")
     private String collectVideoId;
-    @Column(name = "collecting_username")
-    private String collectingUsername;
+    @Column(name = "username")
+    private String username;
     @Column(name = "video_id")
     private String videoId;
     @Column(name = "create_time")
@@ -38,6 +38,13 @@ public class CollectVideo implements Serializable {
     private String videoTitle;
     @Column(name = "cover_relative_path")
     private String coverRelativePath;
+
+    public CollectVideo() {
+    }
+
+    public CollectVideo(String videoId) {
+        this.videoId = videoId;
+    }
 
     /**
      * @return the collectVideoId
@@ -51,20 +58,6 @@ public class CollectVideo implements Serializable {
      */
     public void setCollectVideoId(String collectVideoId) {
         this.collectVideoId = collectVideoId;
-    }
-
-    /**
-     * @return the collectingUsername
-     */
-    public String getCollectingUsername() {
-        return collectingUsername;
-    }
-
-    /**
-     * @param collectingUsername the collectingUsername to set
-     */
-    public void setCollectingUsername(String collectingUsername) {
-        this.collectingUsername = collectingUsername;
     }
 
     /**
@@ -121,5 +114,19 @@ public class CollectVideo implements Serializable {
      */
     public void setCoverRelativePath(String coverRelativePath) {
         this.coverRelativePath = coverRelativePath;
+    }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

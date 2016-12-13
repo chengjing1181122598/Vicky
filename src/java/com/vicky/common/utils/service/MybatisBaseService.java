@@ -10,7 +10,6 @@ import com.vicky.common.utils.page.Order;
 import com.vicky.common.utils.page.Page;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
 import com.vicky.common.utils.update.UpdateProperty;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -115,8 +114,8 @@ public abstract class MybatisBaseService<T, PrimaryKey> implements BaseService<T
      */
     public Map<String, Object> getPageData(T t, RowBounds rowBounds) {
         Map<String, Object> map = new HashMap<>();
-        map.put(BaseService.DATA_KEY, this.selectByRowBounds(t, rowBounds));
-        map.put(BaseService.TOTAL_KEY, this.selectCount(t));
+        map.put(Page.DATA_KEY, this.selectByRowBounds(t, rowBounds));
+        map.put(Page.TOTAL_KEY, this.selectCount(t));
         return map;
     }
 
@@ -157,8 +156,8 @@ public abstract class MybatisBaseService<T, PrimaryKey> implements BaseService<T
      */
     public Map<String, Object> getPageData(Example example, RowBounds rowBounds) {
         Map<String, Object> map = new HashMap<>();
-        map.put(BaseService.DATA_KEY, this.selectByExampleAndRowBounds(example, rowBounds));
-        map.put(BaseService.TOTAL_KEY, this.selectCountByExample(example));
+        map.put(Page.DATA_KEY, this.selectByExampleAndRowBounds(example, rowBounds));
+        map.put(Page.TOTAL_KEY, this.selectCountByExample(example));
         return map;
     }
 
@@ -289,8 +288,8 @@ public abstract class MybatisBaseService<T, PrimaryKey> implements BaseService<T
     @Override
     public Map<String, Object> getPageData(HttpServletRequest request) throws Exception {
         Map<String, Object> map = new HashMap<>();
-        map.put(BaseService.DATA_KEY, this.list(request));
-        map.put(BaseService.TOTAL_KEY, this.listCount(request));
+        map.put(Page.DATA_KEY, this.list(request));
+        map.put(Page.TOTAL_KEY, this.listCount(request));
         return map;
     }
 
