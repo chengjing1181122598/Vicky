@@ -5,6 +5,7 @@
  */
 package com.vicky.modules.usermgr.entity;
 
+import com.vicky.common.finalpackage.Final;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.Length;
 
 /**
  *
@@ -24,15 +27,26 @@ public class User implements Serializable, Cloneable {
     public static final String DEFAULT_HEAD_RELATIVE_PATH = "/vicky_file/default/user_head.png";
     public static final String DEFAULT_HEAD_ABSOLUTE_PATH = "/F:/nginx_file/html/vicky_file/default/user_head.png";
 
+    public static final String MALE = "男";
+    public static final String FEMALE = "女";
+    public static final String SECRET = "保密";
+
+    public static int HEAD_SIZE = Final.FILE_SIZE_M * 2;
+
     @Id
     @Column(name = "username")
+    @Pattern(regexp = "[\u4e00-\u9fa5\u0800-\u4e00\\w]+", message = "用户名只能为中文英文日文数字")
+    @Length(min = 2, max = 10, message = "用户名在2位到8位之间")
     private String username;
     @Column(name = "email")
+    @Pattern(regexp = "[\\w]+@[\\w]+\\.[\\w]+", message = "请输入正确的邮箱地址")
     private String email;
     @Column(name = "create_time")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date createTime;
     @Column(name = "password")
+    @Pattern(regexp = ".*[a-zA-Z]+.*", message = "密码必须含有英文字母")
+    @Length(min = 8, max = 30, message = "密码在6位到30位之间")
     private String password;
     @Column(name = "sex")
     private String sex;

@@ -22,9 +22,11 @@ import java.util.Date;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -118,9 +120,31 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
     @RequestMapping("save")
     @ResponseBody
     public StatusMsg save(@RequestParam("videoCover") MultipartFile videoCover,
-            @RequestParam("videoFile") MultipartFile videoFile, VideoCheck t) throws Exception {
+            @RequestParam("videoFile") MultipartFile videoFile, @Valid VideoCheck t, BindingResult result) throws Exception {
         videoCover.getInputStream().available();
         videoFile.getInputStream().available();
+
+        if (result.hasErrors()) {
+            throw new StatusMsgException(result.getFieldError().getDefaultMessage());
+        }
+
+        String lowerCase1 = videoCover.getOriginalFilename().toLowerCase();
+        if (!lowerCase1.endsWith(".jpg") || !lowerCase1.endsWith(".png") || !lowerCase1.endsWith(".gif") || !lowerCase1.endsWith(".jpeg")) {
+            throw new StatusMsgException("封面必须为图片文件");
+        }
+
+        String lowerCase2 = videoFile.getOriginalFilename().toLowerCase();
+        if (!lowerCase2.endsWith(".mp4")) {
+            throw new StatusMsgException("视频只能为mp4文件");
+        }
+
+        if (videoCover.getSize() > Video.COVER_SIZE) {
+            throw new StatusMsgException("封面文件不能大于" + Video.COVER_SIZE / Final.FILE_SIZE_M + "M");
+        }
+
+        if (videoFile.getSize() > Video.VIDEO_SIZE) {
+            throw new StatusMsgException("视频文件不能大于" + Video.VIDEO_SIZE / Final.FILE_SIZE_M + "M");
+        }
 
         if (t.getModuleId() == null || t.getModuleId().equals("")) {
             throw new StatusMsgException("视频模块id不能为空");

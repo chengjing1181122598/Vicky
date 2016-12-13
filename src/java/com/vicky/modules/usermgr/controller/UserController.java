@@ -23,8 +23,11 @@ import java.io.IOException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,8 +57,17 @@ public class UserController extends MyEntityController<User, String> {
 
     @RequestMapping("updateHead")
     @ResponseBody
-    public StatusMsg updateHead(@RequestParam(value = "headImage") MultipartFile file) throws IOException, CloneNotSupportedException {
+    public StatusMsg updateHead(@RequestParam(value = "headImage") MultipartFile file) throws IOException, CloneNotSupportedException, StatusMsgException {
         User user = this.getUser();
+        if (file.getSize() > User.HEAD_SIZE) {
+            throw new StatusMsgException("上传头像不能大于" + User.HEAD_SIZE / Final.FILE_SIZE_M + "M");
+        }
+
+        String lowerCase = file.getOriginalFilename().toLowerCase();
+        if (!lowerCase.endsWith(".jpg") || !lowerCase.endsWith(".png") || !lowerCase.endsWith(".gif") || !lowerCase.endsWith(".jpeg")) {
+            throw new StatusMsgException("请上传图片文件");
+        }
+
         file.getInputStream().available();
 
         String[] paths = WebFileUtils.savePublicFileAtOtherServer(file,
@@ -91,6 +103,10 @@ public class UserController extends MyEntityController<User, String> {
     public StatusMsg update(HttpServletRequest request, User updateUser) throws StatusMsgException, CloneNotSupportedException {
         User user = this.getUser();
         if (updateUser.getSex() != null && !updateUser.getSex().equals("")) {
+            if (!updateUser.getSex().equals(User.FEMALE)
+                    || !updateUser.getSex().equals(User.MALE) || !updateUser.getSex().equals(User.SECRET)) {
+                throw new StatusMsgException("性别只能为：'男','女'或者'保密'");
+            }
             user.setSex(updateUser.getSex());
         }
         if (updateUser.getSignature() != null && !updateUser.getSignature().equals("")) {
@@ -111,6 +127,10 @@ public class UserController extends MyEntityController<User, String> {
         if (!EncodePassword.checkPassword(frontPWD, user.getPassword())) {
             throw new StatusMsgException("原来密码不正确");
         } else {
+
+            if (afterPWD.length() < 8 || afterPWD.length() > 30 || !afterPWD.matches(".*[a-zA-Z]+.*")) {
+                throw new StatusMsgException("密码长度8位到30位,必须包含英文字母");
+            }
             user.setPassword(EncodePassword.encodePassword(afterPWD));
             this.userService.updateSelective(user);
         }
@@ -177,7 +197,12 @@ public class UserController extends MyEntityController<User, String> {
 
     @RequestMapping("prepareRegister")
     @ResponseBody
-    public StatusMsg prepareRegister(HttpServletRequest request, User u) throws Exception {
+    public StatusMsg prepareRegister(HttpServletRequest request, @Valid User u, BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            FieldError error = result.getFieldError();
+            throw new StatusMsgException(error.getDefaultMessage());
+        }
+
         request.getSession(true);
         String username = u.getUsername();
         String email = u.getEmail();

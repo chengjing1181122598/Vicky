@@ -15,4 +15,8 @@ public class Final {
     public static final String WEB_ROOT_PATH = "vicky_file";
     public static final String IMAGE_PATH = "image";
     public static final String VEDIO_PATH = "vedio";
+
+    public static final int FILE_SIZE_M = 1024 * 1024;
+    public static final int FILE_SIZE_K = 1024;
+    public static final int FILE_SIZE_G = 1024 * 1024 * 1024;
 }

@@ -5,6 +5,7 @@
  */
 package com.vicky.modules.videomgr.entity;
 
+import com.vicky.common.finalpackage.Final;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import org.hibernate.validator.constraints.Length;
 
 /**
  *
@@ -36,6 +38,7 @@ public class VideoCheck implements Serializable {
     @Column(name = "video_name")
     private String videoName;
     @Column(name = "video_title")
+    @Length(min = 1, max = 20, message = "标题长度在1到20位之间")
     private String videoTitle;
     @Column(name = "username")
     private String username;
@@ -47,6 +50,7 @@ public class VideoCheck implements Serializable {
     @Column(name = "cover_relative_path")
     private String coverRelativePath;
     @Column(name = "video_explain")
+    @Length(min = 1, max = 255, message = "标题长度在1到255位之间")
     private String videoExplain;
 
     /**
