@@ -31,7 +31,7 @@ public class User implements Serializable, Cloneable {
     public static final String FEMALE = "女";
     public static final String SECRET = "保密";
 
-    public static int HEAD_SIZE = Final.FILE_SIZE_M * 2;
+    public static int HEAD_MAX_SIZE = Final.FILE_SIZE_M * 2;
 
     @Id
     @Column(name = "username")

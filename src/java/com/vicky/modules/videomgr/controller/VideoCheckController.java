@@ -138,12 +138,12 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
             throw new StatusMsgException("视频只能为mp4文件");
         }
 
-        if (videoCover.getSize() > Video.COVER_SIZE) {
-            throw new StatusMsgException("封面文件不能大于" + Video.COVER_SIZE / Final.FILE_SIZE_M + "M");
+        if (videoCover.getSize() > Video.COVER_MAX_SIZE) {
+            throw new StatusMsgException("封面文件不能大于" + Video.COVER_MAX_SIZE / Final.FILE_SIZE_M + "M");
         }
 
-        if (videoFile.getSize() > Video.VIDEO_SIZE) {
-            throw new StatusMsgException("视频文件不能大于" + Video.VIDEO_SIZE / Final.FILE_SIZE_M + "M");
+        if (videoFile.getSize() > Video.VIDEO_MAX_SIZE) {
+            throw new StatusMsgException("视频文件不能大于" + Video.VIDEO_MAX_SIZE / Final.FILE_SIZE_M + "M");
         }
 
         if (t.getModuleId() == null || t.getModuleId().equals("")) {

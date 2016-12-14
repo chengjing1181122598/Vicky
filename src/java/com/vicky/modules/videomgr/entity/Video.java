@@ -21,9 +21,9 @@ import javax.persistence.Temporal;
 @Entity
 @Table
 public class Video implements Serializable {
-    
-    public static int COVER_SIZE = Final.FILE_SIZE_M * 2;
-    public static int VIDEO_SIZE = Final.FILE_SIZE_M * 1000;
+
+    public static int COVER_MAX_SIZE = Final.FILE_SIZE_M * 2;
+    public static int VIDEO_MAX_SIZE = Final.FILE_SIZE_M * 1024;
 
     @Id
     @Column(name = "video_id")

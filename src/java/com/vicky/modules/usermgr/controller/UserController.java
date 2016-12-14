@@ -59,8 +59,8 @@ public class UserController extends MyEntityController<User, String> {
     @ResponseBody
     public StatusMsg updateHead(@RequestParam(value = "headImage") MultipartFile file) throws IOException, CloneNotSupportedException, StatusMsgException {
         User user = this.getUser();
-        if (file.getSize() > User.HEAD_SIZE) {
-            throw new StatusMsgException("上传头像不能大于" + User.HEAD_SIZE / Final.FILE_SIZE_M + "M");
+        if (file.getSize() > User.HEAD_MAX_SIZE) {
+            throw new StatusMsgException("上传头像不能大于" + User.HEAD_MAX_SIZE / Final.FILE_SIZE_M + "M");
         }
 
         String lowerCase = file.getOriginalFilename().toLowerCase();
