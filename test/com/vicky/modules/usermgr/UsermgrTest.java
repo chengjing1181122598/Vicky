@@ -54,17 +54,19 @@ public class UsermgrTest {
 //        for (Map<String, Object> map : maps) {
 //            System.out.println(map.get("createTime").getClass());
 //        }
-
-        mockMvc.perform((post("/commentFloor/getAll")
-                .param("videoId", "1")
+        Long time1 = System.currentTimeMillis();
+        mockMvc.perform((post("/user/prepareRegister")
+                .param("username", "黎伟琪")
                 .param("password", "5201314liweiqi")
-                .param("email", "1181122598@qq.com")
+                .param("email", "821178443@qq.com")
                 .param("condition_GT_D_birthday", "1994-10-10")
                 .param("pageSize", "1")
                 .param("pageIndex", "2")
                 .param("order_property", "age")
                 .param("order_type", "asc")))
                 .andExpect(status().isOk()).andDo(print());
+        Long time2 = System.currentTimeMillis();
+        System.out.println(time2 - time1);
     }
 
 }

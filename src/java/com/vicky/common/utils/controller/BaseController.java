@@ -7,6 +7,7 @@ package com.vicky.common.utils.controller;
 
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
+import com.vicky.common.utils.statusmsg.StatusType;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -64,9 +65,28 @@ public class BaseController {
             this.getLogger().error("getMessage：" + exception.getMessage());
             this.getLogger().error("exception：", exception);
         }
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.ERROR);
+        StatusMsg statusMsg = new StatusMsg(StatusType.ERROR);
         statusMsg.getMessage().put("toString", exception.toString());
         statusMsg.getMessage().put(StatusMsg.MESSAGE, exception.getMessage());
+        return statusMsg;
+    }
+
+    protected StatusMsg simpleBuildMsg(StatusType statusType, String message) {
+        StatusMsg statusMsg = new StatusMsg(statusType);
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, message);
+        return statusMsg;
+    }
+
+    protected StatusMsg simpleBuildMsg(StatusType statusType, String message, Object entity) {
+        StatusMsg statusMsg = new StatusMsg(statusType);
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, message);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, entity);
+        return statusMsg;
+    }
+
+    protected StatusMsg simpleBuildMsg(StatusType statusType, Object entity) {
+        StatusMsg statusMsg = new StatusMsg(statusType);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, entity);
         return statusMsg;
     }
 }

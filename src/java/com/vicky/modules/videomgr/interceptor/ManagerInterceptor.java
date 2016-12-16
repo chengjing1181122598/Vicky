@@ -7,6 +7,7 @@ package com.vicky.modules.videomgr.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vicky.common.utils.statusmsg.StatusMsg;
+import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.videomgr.utils.Manager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +23,7 @@ public class ManagerInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Manager manager = (Manager) request.getSession().getAttribute("manager");
         if (manager == null) {
-            StatusMsg statusMsg = new StatusMsg(StatusMsg.ERROR);
+            StatusMsg statusMsg = new StatusMsg(StatusType.ERROR);
             statusMsg.getMessage().put(StatusMsg.MESSAGE, "管理员没有登录");
             ObjectMapper objectMapper = new ObjectMapper();
             response.getWriter().write(objectMapper.writeValueAsString(statusMsg));

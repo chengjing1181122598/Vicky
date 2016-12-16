@@ -8,7 +8,6 @@ package com.vicky.common.utils.update;
 import com.vicky.common.utils.page.Condition;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

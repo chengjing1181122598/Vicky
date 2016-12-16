@@ -9,6 +9,7 @@ import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
+import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.videomgr.entity.VideoModule;
 import com.vicky.modules.videomgr.service.VideoModuleService;
 import com.vicky.modules.videomgr.utils.Manager;
@@ -67,9 +68,8 @@ public class VideoModuleController extends MyEntityController<VideoModule, Strin
         } else {
             request.getSession().setAttribute("manager", manager);
         }
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.MESSAGE, "管理员登录成功!");
-        return statusMsg;
+
+        return super.simpleBuildMsg(StatusType.SUCCESS, "管理员登录成功!");
     }
 
     @Override
@@ -79,10 +79,8 @@ public class VideoModuleController extends MyEntityController<VideoModule, Strin
         t.setModuleId(null);
         t.setCreateTime(new Date());
         this.moduleService.save(t);
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.MESSAGE, "保存视频模块成功");
-        statusMsg.getMessage().put(StatusMsg.ENTITY, t);
-        return statusMsg;
+
+        return super.simpleBuildMsg(StatusType.SUCCESS, "保存视频模块成功", t);
     }
 
 }

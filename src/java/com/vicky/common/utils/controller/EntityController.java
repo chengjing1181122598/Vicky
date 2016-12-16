@@ -7,6 +7,7 @@ package com.vicky.common.utils.controller;
 
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
+import com.vicky.common.utils.statusmsg.StatusType;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +38,7 @@ public abstract class EntityController<T, PrimaryKey> extends BaseController {
      */
     public StatusMsg getById(HttpServletRequest request, HttpServletResponse response, PrimaryKey primaryKey) {
         T t = this.getBaseService().selectByPrimaryKey(primaryKey);
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.ENTITY, t);
-        return statusMsg;
+        return super.simpleBuildMsg(StatusType.SUCCESS, t);
     }
 
     /**
@@ -53,9 +52,7 @@ public abstract class EntityController<T, PrimaryKey> extends BaseController {
      */
     public StatusMsg getByEntity(HttpServletRequest request, HttpServletResponse response, T t) throws Exception {
         T r = this.getBaseService().selectOne(t);
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.ENTITY, r);
-        return statusMsg;
+        return super.simpleBuildMsg(StatusType.SUCCESS, r);
     }
 
     /**
@@ -73,10 +70,7 @@ public abstract class EntityController<T, PrimaryKey> extends BaseController {
             throws Exception {
         this.getBaseService().update(primaryKey, request);
         T t = this.getBaseService().selectByPrimaryKey(primaryKey);
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.MESSAGE, "修改信息成功,修改后的实体如下：");
-        statusMsg.getMessage().put(StatusMsg.ENTITY, t);
-        return statusMsg;
+        return super.simpleBuildMsg(StatusType.SUCCESS, "修改信息成功,修改后的实体如下：", t);
     }
 
     /**
@@ -91,10 +85,7 @@ public abstract class EntityController<T, PrimaryKey> extends BaseController {
     public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, PrimaryKey primaryKey) throws Exception {
         T t = this.getBaseService().selectByPrimaryKey(primaryKey);
         this.getBaseService().deleteById(primaryKey);
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.MESSAGE, "删除成功,删除实体如下：");
-        statusMsg.getMessage().put(StatusMsg.ENTITY, t);
-        return statusMsg;
+        return super.simpleBuildMsg(StatusType.SUCCESS, "删除成功,删除实体如下：", t);
     }
 
     /**
@@ -108,10 +99,7 @@ public abstract class EntityController<T, PrimaryKey> extends BaseController {
      */
     public StatusMsg save(HttpServletRequest request, HttpServletResponse response, T t) throws Exception {
         this.getBaseService().save(t);
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.MESSAGE, "保存成功,保存的实体如下：");
-        statusMsg.getMessage().put(StatusMsg.ENTITY, t);
-        return statusMsg;
+        return super.simpleBuildMsg(StatusType.SUCCESS, "保存成功,保存的实体如下：", t);
     }
 
     /**

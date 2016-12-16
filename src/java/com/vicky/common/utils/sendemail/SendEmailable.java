@@ -5,8 +5,6 @@
  */
 package com.vicky.common.utils.sendemail;
 
-import org.slf4j.Logger;
-
 /**
  * 发送邮件接口
  *

@@ -26,11 +26,5 @@ public class UserService extends MybatisBaseService<User, String> {
     protected Mapper<User> getMapper() {
         return this.userMapper;
     }
-
-    public User getByIdNoPassword(String username) {
-        User user = this.userMapper.selectByPrimaryKey(username);
-        user.setPassword(null);
-        return user;
-    }
     
 }

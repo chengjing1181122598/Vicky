@@ -11,6 +11,7 @@ import com.vicky.common.utils.DealFile.WebFileUtils;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
+import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.messagemgr.entity.Message;
 import com.vicky.modules.messagemgr.service.MessageService;
 import com.vicky.modules.videomgr.entity.Video;
@@ -78,10 +79,7 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         message.setUsername(video.getUsername());
         this.messageService.save(message);
 
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.MESSAGE, "视频审核已通过");
-        statusMsg.getMessage().put(StatusMsg.ENTITY, video);
-        return statusMsg;
+        return super.simpleBuildMsg(StatusType.SUCCESS, "视频审核已通过", video);
     }
 
     @RequestMapping("notPass")
@@ -97,10 +95,7 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         message.setUsername(videoCheck.getUsername());
         this.messageService.save(message);
 
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.MESSAGE, "视频审核不通过");
-        statusMsg.getMessage().put(StatusMsg.ENTITY, videoCheck);
-        return statusMsg;
+        return super.simpleBuildMsg(StatusType.SUCCESS, "视频审核不通过", videoCheck);
     }
 
     @Override
@@ -167,10 +162,8 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         this.checkService.save(t);
         t.setAbsolutePath(null);
         t.setRelativePath(null);
-        StatusMsg statusMsg = new StatusMsg(StatusMsg.SUCCESS);
-        statusMsg.getMessage().put(StatusMsg.MESSAGE, "视频上传成功,正在等待管理员的审核,请留意消息通知!");
-        statusMsg.getMessage().put(StatusMsg.ENTITY, t);
-        return statusMsg;
+        
+        return super.simpleBuildMsg(StatusType.SUCCESS, "视频上传成功,正在等待管理员的审核,请留意消息通知!", t);
     }
 
 }

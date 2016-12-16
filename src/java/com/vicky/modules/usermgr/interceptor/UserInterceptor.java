@@ -7,6 +7,7 @@ package com.vicky.modules.usermgr.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vicky.common.utils.statusmsg.StatusMsg;
+import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.usermgr.entity.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +23,7 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
-            StatusMsg statusMsg = new StatusMsg(StatusMsg.ERROR);
+            StatusMsg statusMsg = new StatusMsg(StatusType.ERROR);
             statusMsg.getMessage().put(StatusMsg.MESSAGE, "用户没有登录");
             ObjectMapper objectMapper = new ObjectMapper();
             response.getWriter().write(objectMapper.writeValueAsString(statusMsg));

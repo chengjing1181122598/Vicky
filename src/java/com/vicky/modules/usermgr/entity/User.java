@@ -45,8 +45,8 @@ public class User implements Serializable, Cloneable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date createTime;
     @Column(name = "password")
-    @Pattern(regexp = ".*[a-zA-Z]+.*", message = "密码必须含有英文字母")
-    @Length(min = 8, max = 30, message = "密码在6位到30位之间")
+    @Pattern(regexp = "\\w*[a-zA-Z]+\\w*", message = "密码为数字字母,必须含有字母")
+    @Length(min = 8, max = 30, message = "密码在8位到30位之间")
     private String password;
     @Column(name = "sex")
     private String sex;
