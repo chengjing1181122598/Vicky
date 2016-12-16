@@ -12,8 +12,10 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +28,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Vicky
  */
 public class BaseController {
+
+    @Autowired
+    protected HttpServletRequest request;
+    @Autowired
+    protected HttpServletResponse response;
 
     /**
      * 获取日志Logger,为org.slf4j.Logger

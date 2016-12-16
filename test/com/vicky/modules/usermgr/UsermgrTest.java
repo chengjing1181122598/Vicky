@@ -56,9 +56,9 @@ public class UsermgrTest {
 //        }
         Long time1 = System.currentTimeMillis();
         mockMvc.perform((post("/user/prepareRegister")
-                .param("username", "黎伟琪")
+                .param("username", "程景")
                 .param("password", "5201314liweiqi")
-                .param("email", "821178443@qq.com")
+                .param("email", "1181122598@qq.com")
                 .param("condition_GT_D_birthday", "1994-10-10")
                 .param("pageSize", "1")
                 .param("pageIndex", "2")

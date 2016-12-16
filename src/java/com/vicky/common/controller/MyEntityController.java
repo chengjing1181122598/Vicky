@@ -8,8 +8,6 @@ package com.vicky.common.controller;
 import com.vicky.common.utils.controller.EntityController;
 import com.vicky.modules.usermgr.entity.User;
 import com.vicky.modules.videomgr.utils.Manager;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -19,15 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class MyEntityController<T, Primary> extends EntityController<T, Primary> {
 
-    @Autowired
-    private HttpServletRequest request;
-
     protected User getUser() {
-        return (User) this.request.getSession().getAttribute("user");
+        return (User) super.request.getSession().getAttribute("user");
     }
 
     protected Manager getManager() {
-        return (Manager) this.request.getSession().getAttribute("manager");
+        return (Manager) super.request.getSession().getAttribute("manager");
     }
 
 }

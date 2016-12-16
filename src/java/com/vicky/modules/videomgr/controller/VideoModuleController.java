@@ -61,12 +61,12 @@ public class VideoModuleController extends MyEntityController<VideoModule, Strin
 
     @RequestMapping("login")
     @ResponseBody
-    public StatusMsg login(HttpServletRequest request, Manager manager) throws Exception {
+    public StatusMsg login(Manager manager) throws Exception {
         if (!manager.getUsername().equals(Manager.DEFAULT_MANAGER_USERNAME)
                 || !manager.getPassword().equals(Manager.DEFAULT_MANAGER_PASSWORD)) {
             throw new StatusMsgException("管理员账号密码不正确!");
         } else {
-            request.getSession().setAttribute("manager", manager);
+            super.request.getSession().setAttribute("manager", manager);
         }
 
         return super.simpleBuildMsg(StatusType.SUCCESS, "管理员登录成功!");
