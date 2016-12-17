@@ -81,7 +81,7 @@ public class UserController extends MyEntityController<User, String> {
         }
 
         user.setAbsolutePath(paths[0]);
-        user.setRelativePath(paths[1]);
+        user.setRelativePath(Final.FILE_SERVER_PATH + paths[1]);
 
         this.userService.updateSelective(user);
 
@@ -161,7 +161,6 @@ public class UserController extends MyEntityController<User, String> {
         if (!EncodePassword.checkPassword(paramUser.getPassword(), user.getPassword())) {
             throw new StatusMsgException("密码错误");
         }
-        user = this.userService.selectByPrimaryKey(user.getUsername());
         super.request.getSession().setAttribute("user", user);
         return super.simpleBuildMsg(StatusType.SUCCESS, this.getProtectedUser(user));
     }
@@ -208,12 +207,12 @@ public class UserController extends MyEntityController<User, String> {
         u.setCreateTime(new Date());
         u.setPassword(EncodePassword.encodePassword(u.getPassword()));
         u.setAbsolutePath(User.DEFAULT_HEAD_ABSOLUTE_PATH);
-        u.setRelativePath(User.DEFAULT_HEAD_RELATIVE_PATH);
+        u.setRelativePath(Final.FILE_SERVER_PATH + User.DEFAULT_HEAD_RELATIVE_PATH);
 
         super.request.getSession().setAttribute("registerUser", u);
         super.request.getSession().setAttribute("avtivateCode", avtivateCode);
         System.out.println(super.request.getSession().getAttribute("avtivateCode"));
-        return super.simpleBuildMsg(StatusType.SUCCESS, "发送邮件成功,请前往邮箱获取激活码!",this.getProtectedUser(u));
+        return super.simpleBuildMsg(StatusType.SUCCESS, "发送邮件成功,请前往邮箱获取激活码!", this.getProtectedUser(u));
     }
 
 }

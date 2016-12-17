@@ -122,7 +122,7 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         }
 
         String lowerCase1 = videoCover.getOriginalFilename().toLowerCase();
-        if (!lowerCase1.endsWith(".jpg") && !lowerCase1.endsWith(".png") 
+        if (!lowerCase1.endsWith(".jpg") && !lowerCase1.endsWith(".png")
                 && !lowerCase1.endsWith(".gif") && !lowerCase1.endsWith(".jpeg")) {
             throw new StatusMsgException("封面必须为图片文件");
         }
@@ -152,16 +152,16 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         String[] strings2 = WebFileUtils.savePublicFileAtOtherServer(videoFile,
                 Final.SERVER_PATH, Final.WEB_ROOT_PATH, Final.VEDIO_PATH, this.getUser().getUsername());
         t.setAbsolutePath(strings2[0]);
-        t.setRelativePath(strings2[1]);
+        t.setRelativePath(Final.FILE_SERVER_PATH + strings2[1]);
         t.setCoverAbsolutePath(strings1[0]);
-        t.setCoverRelativePath(strings1[1]);
+        t.setCoverRelativePath(Final.FILE_SERVER_PATH + strings1[1]);
         t.setCreateTime(new Date());
         t.setUsername(this.getUser().getUsername());
         t.setVideoName(videoFile.getOriginalFilename());
         this.checkService.save(t);
         t.setAbsolutePath(null);
         t.setRelativePath(null);
-        
+
         return super.simpleBuildMsg(StatusType.SUCCESS, "视频上传成功,正在等待管理员的审核,请留意消息通知!", t);
     }
 

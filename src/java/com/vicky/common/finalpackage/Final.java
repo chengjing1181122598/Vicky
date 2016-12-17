@@ -16,6 +16,8 @@ public class Final {
     public static final String IMAGE_PATH = "image";
     public static final String VEDIO_PATH = "vedio";
 
+    public static final String FILE_SERVER_PATH = "http://localhost:8084";
+
     public static final int FILE_SIZE_M = 1024 * 1024;
     public static final int FILE_SIZE_K = 1024;
     public static final int FILE_SIZE_G = 1024 * 1024 * 1024;
