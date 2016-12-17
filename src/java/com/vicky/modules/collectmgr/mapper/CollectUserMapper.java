@@ -17,7 +17,7 @@ import tk.mybatis.mapper.common.Mapper;
  */
 public interface CollectUserMapper extends Mapper<CollectUser> {
 
-    public List<Map<String, Object>> getAll(String username, RowBounds rowBounds);
+    public List<Map<String, Object>> getList(String username, RowBounds rowBounds);
 
-    public int getAllCount(String username);
+    public int getListCount(String username);
 }

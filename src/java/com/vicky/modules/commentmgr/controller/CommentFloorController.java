@@ -41,9 +41,9 @@ public class CommentFloorController extends MyEntityController<CommentFloor, Str
         return this.floorService;
     }
 
-    @RequestMapping("getAll")
+    @RequestMapping("getList")
     @ResponseBody
-    public Map<String, Object> getAll(String videoId, Integer pageIndex, Integer pageSize) {
+    public Map<String, Object> getList(String videoId, Integer pageIndex, Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
         int index = Page.DEFAULT_PAGE_INDEX;
         int limit = Page.DEFAULT_PAGE_SIZE;
@@ -54,8 +54,8 @@ public class CommentFloorController extends MyEntityController<CommentFloor, Str
             limit = pageSize;
         }
         RowBounds rowBounds = new RowBounds((index - 1) * limit, limit);
-        int total = this.floorService.getAllCount(videoId);
-        List<Map<String, Object>> maps = this.floorService.getAll(videoId, rowBounds);
+        int total = this.floorService.getListCount(videoId);
+        List<Map<String, Object>> maps = this.floorService.getList(videoId, rowBounds);
         map.put(Page.TOTAL_KEY, total);
         map.put(Page.DATA_KEY, maps);
         return map;

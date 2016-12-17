@@ -65,7 +65,8 @@ public class UserController extends MyEntityController<User, String> {
         }
 
         String lowerCase = file.getOriginalFilename().toLowerCase();
-        if (!lowerCase.endsWith(".jpg") || !lowerCase.endsWith(".png") || !lowerCase.endsWith(".gif") || !lowerCase.endsWith(".jpeg")) {
+        if (!lowerCase.endsWith(".jpg") && !lowerCase.endsWith(".png")
+                && !lowerCase.endsWith(".gif") && !lowerCase.endsWith(".jpeg")) {
             throw new StatusMsgException("请上传图片文件");
         }
 
@@ -100,7 +101,7 @@ public class UserController extends MyEntityController<User, String> {
         User user = this.getUser();
         if (updateUser.getSex() != null && !updateUser.getSex().equals("")) {
             if (!updateUser.getSex().equals(User.FEMALE)
-                    || !updateUser.getSex().equals(User.MALE) || !updateUser.getSex().equals(User.SECRET)) {
+                    && !updateUser.getSex().equals(User.MALE) && !updateUser.getSex().equals(User.SECRET)) {
                 throw new StatusMsgException("性别只能为：'男','女'或者'保密'");
             }
             user.setSex(updateUser.getSex());
@@ -121,8 +122,8 @@ public class UserController extends MyEntityController<User, String> {
             throw new StatusMsgException("原来密码不正确");
         } else {
 
-            if (afterPWD.length() < 8 || afterPWD.length() > 30 || !afterPWD.matches(".*[a-zA-Z]+.*")) {
-                throw new StatusMsgException("密码长度8位到30位,必须包含英文字母");
+            if (afterPWD.length() < 8 || afterPWD.length() > 30 || !afterPWD.matches("\\w*[a-zA-Z]+\\w*")) {
+                throw new StatusMsgException("密码长度8位到30位,只能为数字字母,必须含有字母");
             }
             user.setPassword(EncodePassword.encodePassword(afterPWD));
             this.userService.updateSelective(user);
@@ -212,7 +213,7 @@ public class UserController extends MyEntityController<User, String> {
         super.request.getSession().setAttribute("registerUser", u);
         super.request.getSession().setAttribute("avtivateCode", avtivateCode);
         System.out.println(super.request.getSession().getAttribute("avtivateCode"));
-        return super.simpleBuildMsg(StatusType.SUCCESS, "发送邮件成功,请前往邮箱获取激活码!");
+        return super.simpleBuildMsg(StatusType.SUCCESS, "发送邮件成功,请前往邮箱获取激活码!",this.getProtectedUser(u));
     }
 
 }

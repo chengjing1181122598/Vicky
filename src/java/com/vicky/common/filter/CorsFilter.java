@@ -36,8 +36,6 @@ public class CorsFilter implements Filter {
                 + " Expires, Content-Type, X-E4M-With,userId,token");
         //resp.setHeader("Access-Control-Allow-Credentials", "true");
         //resp.setHeader("XDomainRequestAllowed", "1");
-        //response.setCharacterEncoding("utf-8");
-        //request.setCharacterEncoding("utf-8");
         chain.doFilter(request, response);
     }
     

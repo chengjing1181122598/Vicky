@@ -21,21 +21,21 @@ import tk.mybatis.mapper.common.Mapper;
  */
 @Service
 public class CollectUserService extends MybatisBaseService<CollectUser, String> {
-    
+
     @Autowired
     private CollectUserMapper collectUserMapper;
-    
+
     @Override
     protected Mapper<CollectUser> getMapper() {
         return this.collectUserMapper;
     }
-    
-    public List<Map<String, Object>> getAll(String username, RowBounds rowBounds) {
-        return this.collectUserMapper.getAll(username, rowBounds);
+
+    public List<Map<String, Object>> getList(String username, RowBounds rowBounds) {
+        return this.collectUserMapper.getList(username, rowBounds);
     }
-    
-    public int getAllCount(String username) {
-        return this.collectUserMapper.getAllCount(username);
+
+    public int getListCount(String username) {
+        return this.collectUserMapper.getListCount(username);
     }
-    
+
 }

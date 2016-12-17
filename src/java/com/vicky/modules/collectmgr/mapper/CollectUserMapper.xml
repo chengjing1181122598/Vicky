@@ -8,14 +8,14 @@ and open the template in the editor.
 <!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 <mapper namespace="com.vicky.modules.collectmgr.mapper.CollectUserMapper">
     <cache/>
-    <select id="getAll" resultType="hashmap">
+    <select id="getList" resultType="hashmap">
         select  t2.username as username,t2.image_relative_path as relativePath
         from collect_user t1,user t2
         where t1.collecting_username = #{username} and t1.collected_username = t2.username
         order by t1.create_time desc
     </select>
     
-    <select id="getAllCount" resultType="int">
+    <select id="getListCount" resultType="int">
         select  count(*)
         from collect_user t1,user t2
         where t1.collecting_username = #{username} and t1.collected_username = t2.username

@@ -72,8 +72,6 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         video.setVideoTitle(videoCheck.getVideoTitle());
         this.videoService.save(video);
         this.checkService.deleteById(videoId);
-        WebFileUtils.deleteFile(video.getAbsolutePath());
-        WebFileUtils.deleteFile(video.getCoverAbsolutePath());
 
         Message message = MessageBuild.passMessage(video.getVideoTitle());
         message.setUsername(video.getUsername());
@@ -124,7 +122,8 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         }
 
         String lowerCase1 = videoCover.getOriginalFilename().toLowerCase();
-        if (!lowerCase1.endsWith(".jpg") || !lowerCase1.endsWith(".png") || !lowerCase1.endsWith(".gif") || !lowerCase1.endsWith(".jpeg")) {
+        if (!lowerCase1.endsWith(".jpg") && !lowerCase1.endsWith(".png") 
+                && !lowerCase1.endsWith(".gif") && !lowerCase1.endsWith(".jpeg")) {
             throw new StatusMsgException("封面必须为图片文件");
         }
 

@@ -5,7 +5,6 @@
  */
 package com.vicky.modules.videomgr.entity;
 
-import com.vicky.common.finalpackage.Final;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;

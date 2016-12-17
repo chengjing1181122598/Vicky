@@ -11,6 +11,7 @@ import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.usermgr.entity.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.MediaType;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 /**
@@ -26,6 +27,7 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
             StatusMsg statusMsg = new StatusMsg(StatusType.ERROR);
             statusMsg.getMessage().put(StatusMsg.MESSAGE, "用户没有登录");
             ObjectMapper objectMapper = new ObjectMapper();
+            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().write(objectMapper.writeValueAsString(statusMsg));
             response.getWriter().flush();
             return false;

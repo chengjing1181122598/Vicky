@@ -12,6 +12,7 @@ import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.common.utils.statusmsg.StatusMsgException;
 import com.vicky.modules.collectmgr.entity.CollectUser;
 import com.vicky.modules.collectmgr.service.CollectUserService;
+import com.vicky.modules.usermgr.service.UserService;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,15 +35,17 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
 
     @Autowired
     private CollectUserService collectUserService;
+    @Autowired
+    private UserService userService;
 
     @Override
     protected BaseService<CollectUser, String> getBaseService() {
         return this.collectUserService;
     }
 
-    @RequestMapping("getAll")
+    @RequestMapping("getList")
     @ResponseBody
-    public Map<String, Object> getAll(String username, Integer pageIndex, Integer pageSize) {
+    public Map<String, Object> getList(String username, Integer pageIndex, Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
         int index = Page.DEFAULT_PAGE_INDEX;
         int limit = Page.DEFAULT_PAGE_SIZE;
@@ -53,8 +56,8 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
             limit = pageSize;
         }
         RowBounds rowBounds = new RowBounds((index - 1) * limit, limit);
-        int total = this.collectUserService.getAllCount(username);
-        List<Map<String, Object>> maps = this.collectUserService.getAll(username, rowBounds);
+        int total = this.collectUserService.getListCount(username);
+        List<Map<String, Object>> maps = this.collectUserService.getList(username, rowBounds);
         map.put(Page.TOTAL_KEY, total);
         map.put(Page.DATA_KEY, maps);
         return map;
@@ -75,6 +78,9 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
     @RequestMapping("save")
     @ResponseBody
     public StatusMsg save(HttpServletRequest request, HttpServletResponse response, CollectUser t) throws Exception {
+        if (this.userService.selectByPrimaryKey(t.getCollectedUsername()) == null) {
+            throw new StatusMsgException("被收藏的用户名有误");
+        }
         t.setCollectingUsername(super.getUser().getUsername());
         t.setCreateTime(new Date());
         return super.save(request, response, t); //To change body of generated methods, choose Tools | Templates.

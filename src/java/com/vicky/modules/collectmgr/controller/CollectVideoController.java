@@ -15,6 +15,7 @@ import com.vicky.modules.usermgr.entity.User;
 import com.vicky.modules.videomgr.entity.Video;
 import com.vicky.modules.videomgr.service.VideoService;
 import java.util.Date;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +65,14 @@ public class CollectVideoController extends MyEntityController<CollectVideo, Str
 
         return super.save(request, response, t); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    @RequestMapping("getPageData")
+    @ResponseBody
+    public Map<String, Object> getPageData(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return super.getPageData(request, response); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 
 }
