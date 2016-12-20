@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace="com.vicky.modules.videomgr.mapper.VideoMapper">
+    <select id="getPerSize" resultType="hashmap">
+        select count(t1.module_id) as size,t2.module_name as name
+        from video t1,video_module t2 
+        where t1.module_id = t2.module_id
+        group by t1.module_id
+        order by t1.module_id
+    </select>
+    
+    <select id="getSlipeData" resultType="hashmap">
+        select max(create_time) as createTime,video_id as videoId,module_id as moduleId,
+        video_title videoTitle,cover_relative_path as coverRelativePath
+        from video group by module_id order by module_id
+    </select>
+</mapper>

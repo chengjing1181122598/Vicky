@@ -55,7 +55,7 @@ public class UsermgrTest {
 //            System.out.println(map.get("createTime").getClass());
 //        }
         Long time1 = System.currentTimeMillis();
-        mockMvc.perform((post("/user/prepareRegister")
+        mockMvc.perform((post("/video/getSlipeData")
                 .param("username", "程景")
                 .param("password", "5201314liweiqi")
                 .param("email", "1181122598@qq.com")

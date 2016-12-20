@@ -6,6 +6,8 @@
 package com.vicky.modules.videomgr.mapper;
 
 import com.vicky.modules.videomgr.entity.Video;
+import java.util.List;
+import java.util.Map;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -14,4 +16,7 @@ import tk.mybatis.mapper.common.Mapper;
  */
 public interface VideoMapper extends Mapper<Video> {
 
+    public List<Map> getPerSize();
+
+    public List<Map> getSlipeData();
 }

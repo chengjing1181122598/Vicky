@@ -73,7 +73,9 @@ create table collect_user
    create_time          datetime not null comment '收藏时间',
    primary key (collect_user_id),
    unique key AK_ing_ed_user_unique (collecting_username, collected_username)
-);
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 alter table collect_user comment '用户收藏用户表';
 
@@ -106,7 +108,9 @@ create table collect_video
    cover_relative_path  varchar(255) not null comment '视频封面图片文件相对路径',
    primary key (collect_video_id),
    unique key AK_user_vedio_id_unique (username, video_id)
-);
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 alter table collect_video comment '用户收藏视频表';
 
@@ -137,7 +141,9 @@ create table comment_floor
    create_time          datetime not null comment '发表评论的时间',
    video_id             varchar(255) not null comment '评论所属视频ID',
    primary key (floor_id)
-);
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 alter table comment_floor comment '视频评论区的楼层';
 
@@ -177,7 +183,9 @@ create table message
    create_time          datetime not null comment '消息创建时间',
    status               varchar(3) not null comment '消息状态，“001”表示未读，“002”表示已读',
    primary key (message_id)
-);
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 alter table message comment '用户通知消息表';
 
@@ -220,7 +228,9 @@ create table user
    image_absolute_path  varchar(255) not null comment '用户头像图片文件绝对路径',
    primary key (username),
    unique key AK_user_email_unique_key (email)
-);
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 alter table user comment '用户表，包含用户的基本信息';
 
@@ -249,7 +259,9 @@ create table video
    cover_relative_path  varchar(255) not null comment '图片封面图片文件相对路径',
    video_explain        varchar(255) not null comment '视频说明',
    primary key (video_id)
-);
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 alter table video comment '视频表';
 
@@ -302,7 +314,9 @@ create table video_check
    cover_relative_path  varchar(255) not null comment '图片封面图片文件相对路径',
    video_explain        varchar(255) not null comment '视频说明',
    primary key (video_id)
-);
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 alter table video_check comment '视频审核表，视频审核通过后，记录就会插入视频表，同时本表记录被删除';
 
@@ -343,20 +357,39 @@ create index video_check_table_create_time_index on video_check
 /*==============================================================*/
 create table video_module
 (
-   module_id            varchar(255) not null comment '视频模块主键',
+   module_id            varchar(3) not null comment '视频模块主键',
    module_name          varchar(255) not null comment '模块名字',
-   create_time          date not null comment '模块创建时间',
    primary key (module_id),
    unique key AK_vedio_mudule_name_unique (module_name)
-);
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
-alter table video_module comment '视频模块表';
+alter table video_module comment '视频模块表，模块表目前写死，“001”表示“动画”、“002”表示“番剧”、“003”表示“音乐”、“004”表示“舞蹈';
 
 alter table video add constraint FK_Reference_1 foreign key (module_id)
       references video_module (module_id) on delete restrict on update restrict;
 
 alter table video_check add constraint FK_Reference_2 foreign key (module_id)
       references video_module (module_id) on delete restrict on update restrict;
+
+
+/*==============================================================*/
+/* 初始化视频模块表                                         */
+/*==============================================================*/
+insert into video_module values('001','动画');
+insert into video_module values('002','番剧');
+insert into video_module values('003','音乐');
+insert into video_module values('004','舞蹈');
+insert into video_module values('005','游戏');
+insert into video_module values('006','科技');
+insert into video_module values('007','生活');
+insert into video_module values('008','鬼畜');
+insert into video_module values('009','时尚');
+insert into video_module values('010','广告');
+insert into video_module values('011','娱乐');
+insert into video_module values('012','影视');
+
 
 
 
