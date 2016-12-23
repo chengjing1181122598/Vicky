@@ -168,8 +168,8 @@ public class UserController extends MyEntityController<User, String> {
     @RequestMapping("finishRegister")
     @ResponseBody
     public StatusMsg prepareRegister(String activateCode) throws Exception {
-        System.out.println(super.request.getSession().getAttribute("avtivateCode"));
-        if (activateCode.equals(super.request.getSession().getAttribute("avtivateCode"))) {
+        System.out.println(super.request.getSession().getAttribute("activateCode"));
+        if (activateCode.equals(super.request.getSession().getAttribute("activateCode"))) {
             User user = (User) super.request.getSession().getAttribute("registerUser");
             this.userService.save(user);
             super.request.getSession().setAttribute("user", user);
@@ -199,8 +199,8 @@ public class UserController extends MyEntityController<User, String> {
             throw new StatusMsgException("该邮箱已注册");
         }
 
-        String avtivateCode = (int) (Math.random() * 900000 + 100000) + "";
-        Mail activateMail = new ActivateMail(email, avtivateCode);
+        String activateCode = (int) (Math.random() * 900000 + 100000) + "";
+        Mail activateMail = new ActivateMail(email, activateCode);
         SendEmailable sendEmailable = new SendEmailImpl();
         sendEmailable.send(activateMail);
 
@@ -210,8 +210,8 @@ public class UserController extends MyEntityController<User, String> {
         u.setRelativePath(Final.FILE_SERVER_PATH + User.DEFAULT_HEAD_RELATIVE_PATH);
 
         super.request.getSession().setAttribute("registerUser", u);
-        super.request.getSession().setAttribute("avtivateCode", avtivateCode);
-        System.out.println(super.request.getSession().getAttribute("avtivateCode"));
+        super.request.getSession().setAttribute("activateCode", activateCode);
+        System.out.println(super.request.getSession().getAttribute("activateCode"));
         return super.simpleBuildMsg(StatusType.SUCCESS, "发送邮件成功,请前往邮箱获取激活码!", this.getProtectedUser(u));
     }
 
