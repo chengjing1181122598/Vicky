@@ -8,7 +8,6 @@ package com.vicky.modules.usermgr.service;
 import com.vicky.common.service.MemcachedService;
 import com.vicky.modules.usermgr.entity.User;
 import com.vicky.modules.usermgr.mapper.UserMapper;
-import net.rubyeye.xmemcached.MemcachedClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
@@ -19,9 +18,6 @@ import tk.mybatis.mapper.common.Mapper;
  */
 @Service
 public class UserService extends MemcachedService<User, String> {
-
-    @Autowired
-    protected MemcachedClient memcachedClient;
 
     @Autowired
     private UserMapper userMapper;
