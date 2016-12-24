@@ -10,8 +10,6 @@ import com.vicky.common.finalpackage.Final;
 import com.vicky.common.utils.DealFile.WebFileUtils;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
-import com.vicky.common.utils.statusmsg.StatusMsgException;
-import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.messagemgr.entity.Message;
 import com.vicky.modules.messagemgr.service.MessageService;
 import com.vicky.modules.videomgr.entity.Video;
@@ -56,7 +54,7 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
     @RequestMapping("pass")
     @ResponseBody
     @Transactional
-    public StatusMsg pass(String videoId) throws StatusMsgException {
+    public StatusMsg pass(String videoId) {
         VideoCheck videoCheck = this.checkService.selectByPrimaryKey(videoId);
         Video video = new Video();
         video.setAbsolutePath(videoCheck.getAbsolutePath());
@@ -77,12 +75,16 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         message.setUsername(video.getUsername());
         this.messageService.save(message);
 
-        return super.simpleBuildMsg(StatusType.SUCCESS, "视频审核已通过", video);
+        return super.simpleBuildSuccessMsg("视频审核已通过", video);
     }
 
     @RequestMapping("notPass")
     @ResponseBody
-    public StatusMsg notPass(String videoId, String reason) throws StatusMsgException {
+    public StatusMsg notPass(String videoId, String reason) {
+
+        if (reason == null || reason.length() == 0) {
+            return super.simpleBuildErrorMsg("理由不能为空");
+        }
 
         VideoCheck videoCheck = this.checkService.selectByPrimaryKey(videoId);
         this.checkService.deleteById(videoId);
@@ -93,7 +95,7 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         message.setUsername(videoCheck.getUsername());
         this.messageService.save(message);
 
-        return super.simpleBuildMsg(StatusType.SUCCESS, "视频审核不通过", videoCheck);
+        return super.simpleBuildSuccessMsg("视频审核不通过", videoCheck);
     }
 
     @Override
@@ -118,33 +120,33 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         videoFile.getInputStream().available();
 
         if (result.hasErrors()) {
-            throw new StatusMsgException(result.getFieldError().getDefaultMessage());
+            return super.simpleBuildErrorMsg(result.getFieldError().getDefaultMessage());
         }
 
         String lowerCase1 = videoCover.getOriginalFilename().toLowerCase();
         if (!lowerCase1.endsWith(".jpg") && !lowerCase1.endsWith(".png")
                 && !lowerCase1.endsWith(".gif") && !lowerCase1.endsWith(".jpeg")) {
-            throw new StatusMsgException("封面必须为图片文件");
+            return super.simpleBuildErrorMsg("封面必须为图片文件");
         }
 
         String lowerCase2 = videoFile.getOriginalFilename().toLowerCase();
         if (!lowerCase2.endsWith(".mp4")) {
-            throw new StatusMsgException("视频只能为mp4文件");
+            return super.simpleBuildErrorMsg("视频只能为mp4文件");
         }
 
         if (videoCover.getSize() > Video.COVER_MAX_SIZE) {
-            throw new StatusMsgException("封面文件不能大于" + Video.COVER_MAX_SIZE / Final.FILE_SIZE_M + "M");
+            return super.simpleBuildErrorMsg("封面文件不能大于" + Video.COVER_MAX_SIZE / Final.FILE_SIZE_M + "M");
         }
 
         if (videoFile.getSize() > Video.VIDEO_MAX_SIZE) {
-            throw new StatusMsgException("视频文件不能大于" + Video.VIDEO_MAX_SIZE / Final.FILE_SIZE_M + "M");
+            return super.simpleBuildErrorMsg("视频文件不能大于" + Video.VIDEO_MAX_SIZE / Final.FILE_SIZE_M + "M");
         }
 
         if (t.getModuleId() == null || t.getModuleId().equals("")) {
-            throw new StatusMsgException("视频模块id不能为空");
+            return super.simpleBuildErrorMsg("视频模块id不能为空");
         }
         if (t.getVideoTitle() == null || t.getVideoTitle().equals("")) {
-            throw new StatusMsgException("视频标题不能为空");
+            return super.simpleBuildErrorMsg("视频标题不能为空");
         }
 
         String[] strings1 = WebFileUtils.savePublicFileAtOtherServer(videoCover,
@@ -162,7 +164,7 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
         t.setAbsolutePath(null);
         t.setRelativePath(null);
 
-        return super.simpleBuildMsg(StatusType.SUCCESS, "视频上传成功,正在等待管理员的审核,请留意消息通知!", t);
+        return super.simpleBuildSuccessMsg("视频上传成功,正在等待管理员的审核,请留意消息通知!", t);
     }
 
 }

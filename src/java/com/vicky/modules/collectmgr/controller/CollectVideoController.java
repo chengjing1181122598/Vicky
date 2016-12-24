@@ -8,7 +8,6 @@ package com.vicky.modules.collectmgr.controller;
 import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
-import com.vicky.common.utils.statusmsg.StatusMsgException;
 import com.vicky.modules.collectmgr.entity.CollectVideo;
 import com.vicky.modules.collectmgr.service.CollectVideoService;
 import com.vicky.modules.usermgr.entity.User;
@@ -41,13 +40,27 @@ public class CollectVideoController extends MyEntityController<CollectVideo, Str
         return collectVideoService;
     }
 
+    @RequestMapping("isCollected")
+    @ResponseBody
+    public StatusMsg isCollected(String videoId) {
+        CollectVideo collectVideo = new CollectVideo();
+        collectVideo.setUsername(super.getUser().getUsername());
+        collectVideo.setVideoId(videoId);
+        CollectVideo r = this.collectVideoService.selectOne(collectVideo);
+        if (r != null) {
+            return super.simpleBuildSuccessMsg("yes");
+        } else {
+            return super.simpleBuildSuccessMsg("no");
+        }
+    }
+
     @Override
     @RequestMapping("deleteById")
     @ResponseBody
     public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, String primaryKey) throws Exception {
         CollectVideo collectVideo = this.collectVideoService.selectByPrimaryKey(primaryKey);
         if (!collectVideo.getUsername().equals(super.getUser().getUsername())) {
-            throw new StatusMsgException("权限不够");
+            return super.simpleBuildErrorMsg("权限不够");
         }
         return super.deleteById(request, response, primaryKey); //To change body of generated methods, choose Tools | Templates.
     }
@@ -72,7 +85,5 @@ public class CollectVideoController extends MyEntityController<CollectVideo, Str
     public Map<String, Object> getPageData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return super.getPageData(request, response); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 
 }

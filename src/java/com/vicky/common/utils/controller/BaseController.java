@@ -78,21 +78,34 @@ public class BaseController {
         return statusMsg;
     }
 
-    protected StatusMsg simpleBuildMsg(StatusType statusType, String message) {
-        StatusMsg statusMsg = new StatusMsg(statusType);
+    protected StatusMsg simpleBuildErrorMsg(String message) {
+        StatusMsg statusMsg = new StatusMsg(StatusType.ERROR);
         statusMsg.getMessage().put(StatusMsg.MESSAGE, message);
         return statusMsg;
     }
 
-    protected StatusMsg simpleBuildMsg(StatusType statusType, String message, Object entity) {
-        StatusMsg statusMsg = new StatusMsg(statusType);
+    protected StatusMsg simpleBuildErrorMsg(String message, Object entity) {
+        StatusMsg statusMsg = new StatusMsg(StatusType.ERROR);
         statusMsg.getMessage().put(StatusMsg.MESSAGE, message);
         statusMsg.getMessage().put(StatusMsg.ENTITY, entity);
         return statusMsg;
     }
 
-    protected StatusMsg simpleBuildMsg(StatusType statusType, Object entity) {
-        StatusMsg statusMsg = new StatusMsg(statusType);
+    protected StatusMsg simpleBuildSuccessMsg(String message) {
+        StatusMsg statusMsg = new StatusMsg(StatusType.SUCCESS);
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, message);
+        return statusMsg;
+    }
+
+    protected StatusMsg simpleBuildSuccessMsg(String message, Object entity) {
+        StatusMsg statusMsg = new StatusMsg(StatusType.SUCCESS);
+        statusMsg.getMessage().put(StatusMsg.MESSAGE, message);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, entity);
+        return statusMsg;
+    }
+
+    protected StatusMsg simpleBuildSuccessMsg(Object entity) {
+        StatusMsg statusMsg = new StatusMsg(StatusType.SUCCESS);
         statusMsg.getMessage().put(StatusMsg.ENTITY, entity);
         return statusMsg;
     }

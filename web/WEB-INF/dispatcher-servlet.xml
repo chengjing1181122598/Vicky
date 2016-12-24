@@ -37,8 +37,10 @@
             <mvc:mapping path="/message/deleteById"/>
             <mvc:mapping path="/collectUser/save"/>
             <mvc:mapping path="/collectUser/deleteById"/>
+            <mvc:mapping path="/collectUser/isCollected"/>
             <mvc:mapping path="/collectVideo/save"/>
             <mvc:mapping path="/collectVideo/deleteById"/>
+            <mvc:mapping path="/collectVideo/isCollected"/>
             <mvc:mapping path="/commentFloor/save"/>
             <mvc:mapping path="/commentFloor/deleteById"/>
             <bean class="com.vicky.modules.usermgr.interceptor.UserInterceptor" />
