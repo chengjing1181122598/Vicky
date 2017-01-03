@@ -5,6 +5,9 @@
  */
 package com.vicky.common.utils.DealFile;
 
+import com.vicky.common.finalpackage.Final;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -47,15 +50,29 @@ public class WebFileSave implements Runnable {
                 targetFile.getParentFile().mkdirs();
                 targetFile.createNewFile();
             }
-            //以流的方式写入文件
-            InputStream inputStream = this.multipartFile.getInputStream();
-            FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
-            byte[] bs = new byte[1024];
-            while (inputStream.read(bs) != -1) {
-                fileOutputStream.write(bs);
-            }
-            inputStream.close();
-            fileOutputStream.close();
+            this.multipartFile.transferTo(targetFile);
+//            //以流的方式写入文件
+//            InputStream inputStream = this.multipartFile.getInputStream();
+//            int bufferSize;
+//            if (this.multipartFile.getSize() > Integer.MAX_VALUE) {
+//                bufferSize = Integer.MAX_VALUE;
+//            } else {
+//                bufferSize = (int) this.multipartFile.getSize();
+//            }
+//
+//            FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
+//
+//            BufferedInputStream bis = new BufferedInputStream(inputStream, bufferSize);
+//            BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream, bufferSize);
+//            int r;
+//            while ((r = bis.read()) != -1) {
+//                bos.write(r);
+//            }
+//            bis.close();
+//            bos.close();
+//
+//            inputStream.close();
+//            fileOutputStream.close();
         } catch (IOException exception) {
             this.getLogger().error("toString：" + exception.toString());
             this.getLogger().error("getMessage：" + exception.getMessage());
