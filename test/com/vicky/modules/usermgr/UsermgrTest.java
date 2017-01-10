@@ -5,6 +5,8 @@
  */
 package com.vicky.modules.usermgr;
 
+import com.vicky.common.utils.DealFile.WebFileUtils;
+import com.vicky.common.utils.encodepwd.EncodePassword;
 import com.vicky.modules.commentmgr.mapper.CommentFloorMapper;
 import java.util.List;
 import java.util.Map;
@@ -49,24 +51,25 @@ public class UsermgrTest {
 
     @Test
     public void test() throws Exception {
+        WebFileUtils.deleteFile("D:\\zhaoqing\\attach\\402881ec5914da39015914f15d2e00d5_1302790276316123577.jpg");
 //        RowBounds rowBounds = new RowBounds(1, 10);
 //        List<Map<String, Object>> maps = this.commentFloorMapper.getAll("1", rowBounds);
 //        for (Map<String, Object> map : maps) {
 //            System.out.println(map.get("createTime").getClass());
 //        }
-        Long time1 = System.currentTimeMillis();
-        mockMvc.perform((post("/user/prepareRegister")
-                .param("username", "程景")
-                .param("password", "5201314liweiqi")
-                .param("email", "1181122598@qq.com")
-                .param("condition_GT_D_birthday", "1994-10-10")
-                .param("pageSize", "1")
-                .param("pageIndex", "2")
-                .param("order_property", "age")
-                .param("order_type", "asc")))
-                .andExpect(status().isOk()).andDo(print());
-        Long time2 = System.currentTimeMillis();
-        System.out.println(time2 - time1);
+//        Long time1 = System.currentTimeMillis();
+//        mockMvc.perform((post("/user/prepareRegister")
+//                .param("username", "程景")
+//                .param("password", "5201314liweiqi")
+//                .param("email", "1181122598@qq.com")
+//                .param("condition_GT_D_birthday", "1994-10-10")
+//                .param("pageSize", "1")
+//                .param("pageIndex", "2")
+//                .param("order_property", "age")
+//                .param("order_type", "asc")))
+//                .andExpect(status().isOk()).andDo(print());
+//        Long time2 = System.currentTimeMillis();
+//        System.out.println(time2 - time1);
     }
 
 }

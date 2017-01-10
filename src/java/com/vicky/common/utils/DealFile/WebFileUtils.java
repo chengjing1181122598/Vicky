@@ -8,6 +8,8 @@ package com.vicky.common.utils.DealFile;
 import com.vicky.common.utils.TreadPool.ThreadPool;
 import java.io.File;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -18,13 +20,29 @@ import org.springframework.web.multipart.MultipartFile;
 public class WebFileUtils {
 
     /**
+     * 获取日志Logger,为org.slf4j.Logger
+     *
+     * @return org.slf4j.Logger
+     */
+    protected static Logger getLogger() {
+        return LoggerFactory.getLogger(WebFileUtils.class);
+    }
+
+    /**
      * 多线程删除文件
      * <p>
      * @param absolutePath 文件绝对路径
      */
     public static void deleteFile(String absolutePath) {
         File file = new File(absolutePath);
-        ThreadPool.FILE_THREADPOOL.execute(new FileDelete(file));
+        ThreadPool.FILE_THREADPOOL.execute(() -> {
+            if (!file.exists()) {
+                System.out.println(WebFileUtils.class.getName() + "：文件不存在");
+                getLogger().error(WebFileUtils.class.getName() + "：文件不存在");
+            } else {
+                file.delete();
+            }
+        });
     }
 
     /**
