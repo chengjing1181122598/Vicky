@@ -9,7 +9,6 @@ import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.page.Page;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
-import com.vicky.common.utils.statusmsg.StatusMsgException;
 import com.vicky.modules.commentmgr.entity.CommentFloor;
 import com.vicky.modules.commentmgr.service.CommentFloorService;
 import com.vicky.modules.usermgr.entity.User;
@@ -67,7 +66,7 @@ public class CommentFloorController extends MyEntityController<CommentFloor, Str
     public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, String primaryKey) throws Exception {
         CommentFloor commentFloor = this.floorService.selectByPrimaryKey(primaryKey);
         if (!commentFloor.getUsername().equals(super.getUser().getUsername())) {
-            throw new StatusMsgException("权限不够");
+            return super.simpleBuildErrorMsg("权限不够");
         }
         return super.deleteById(request, response, primaryKey);
     }

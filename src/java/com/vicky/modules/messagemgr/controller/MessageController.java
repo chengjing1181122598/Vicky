@@ -8,7 +8,6 @@ package com.vicky.modules.messagemgr.controller;
 import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
-import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.messagemgr.entity.Message;
 import com.vicky.modules.messagemgr.service.MessageService;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class MessageController extends MyEntityController<Message, String> {
         }
         message.setStatus(Message.READED_STATSU);
         this.messageService.updateSelective(message);
-        return super.simpleBuildMsg(StatusType.SUCCESS, "消息已改为已读状态", message);
+        return super.simpleBuildSuccessMsg("消息已改为已读状态", message);
     }
 
     @Override

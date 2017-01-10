@@ -25,6 +25,9 @@ public class Video implements Serializable {
     public static int COVER_MAX_SIZE = Final.FILE_SIZE_M * 2;
     public static int VIDEO_MAX_SIZE = Final.FILE_SIZE_M * 1024;
 
+    public static String MEMCACHED_PREFFIX = "video_";
+    public static int MEMCACHED_TIME_SECOND = 604800;
+
     @Id
     @Column(name = "video_id")
     private String videoId;

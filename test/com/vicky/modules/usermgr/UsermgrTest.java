@@ -10,6 +10,7 @@ import com.vicky.common.utils.encodepwd.EncodePassword;
 import com.vicky.modules.commentmgr.mapper.CommentFloorMapper;
 import java.util.List;
 import java.util.Map;
+import net.rubyeye.xmemcached.MemcachedClient;
 import org.apache.ibatis.session.RowBounds;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,11 +32,14 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {"file:web/WEB-INF/applicationContext.xml", "file:web/WEB-INF/dispatcher-servlet.xml"})
+@ContextConfiguration(locations = {"file:web/WEB-INF/applicationContext.xml", 
+    "file:web/WEB-INF/dispatcher-servlet.xml","file:web/WEB-INF/application_memcached.xml"})
 public class UsermgrTest {
 
     @Autowired
     private CommentFloorMapper commentFloorMapper;
+    @Autowired
+    private MemcachedClient memcachedClient;
 
     public UsermgrTest() {
     }
@@ -51,14 +55,17 @@ public class UsermgrTest {
 
     @Test
     public void test() throws Exception {
-        WebFileUtils.deleteFile("D:\\zhaoqing\\attach\\402881ec5914da39015914f15d2e00d5_1302790276316123577.jpg");
+        Integer integer = this.memcachedClient.get("整数");
+        System.out.println(integer);
+        this.memcachedClient.set("整数", 36000, 20);
+        integer = this.memcachedClient.get("整数");
+        System.out.println(integer);
 //        RowBounds rowBounds = new RowBounds(1, 10);
 //        List<Map<String, Object>> maps = this.commentFloorMapper.getAll("1", rowBounds);
 //        for (Map<String, Object> map : maps) {
 //            System.out.println(map.get("createTime").getClass());
 //        }
 //        Long time1 = System.currentTimeMillis();
-//        mockMvc.perform((post("/user/prepareRegister")
 //                .param("username", "程景")
 //                .param("password", "5201314liweiqi")
 //                .param("email", "1181122598@qq.com")

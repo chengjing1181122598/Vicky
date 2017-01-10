@@ -7,8 +7,10 @@ package com.vicky.modules.videomgr.controller;
 
 import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.DealFile.WebFileUtils;
+import com.vicky.common.utils.page.Page;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
+import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.collectmgr.entity.CollectVideo;
 import com.vicky.modules.collectmgr.service.CollectVideoService;
 import com.vicky.modules.commentmgr.entity.CommentFloor;
@@ -18,6 +20,8 @@ import com.vicky.modules.messagemgr.service.MessageService;
 import com.vicky.modules.videomgr.entity.Video;
 import com.vicky.modules.videomgr.service.VideoService;
 import com.vicky.modules.videomgr.utils.MessageBuild;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +51,24 @@ public class VideoController extends MyEntityController<Video, String> {
     @Override
     protected BaseService<Video, String> getBaseService() {
         return this.videoService;
+    }
+
+    @ResponseBody
+    @RequestMapping("getSlipeData")
+    public Map<String, Object> getSlipeData() {
+        Map<String, Object> map = new HashMap<>();
+        List<Map> list = this.videoService.getSlipeData();
+        map.put(Page.TOTAL_KEY, list.size());
+        map.put(Page.DATA_KEY, list);
+        return map;
+    }
+
+    @ResponseBody
+    @RequestMapping("getPerSize")
+    public StatusMsg getPerSize() {
+        StatusMsg statusMsg = new StatusMsg(StatusType.SUCCESS);
+        statusMsg.getMessage().put(StatusMsg.ENTITY, this.videoService.getPerSize());
+        return statusMsg;
     }
 
     @Override

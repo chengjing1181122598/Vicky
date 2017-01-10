@@ -9,7 +9,6 @@ import com.vicky.common.controller.MyEntityController;
 import com.vicky.common.utils.page.Page;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
-import com.vicky.common.utils.statusmsg.StatusMsgException;
 import com.vicky.modules.collectmgr.entity.CollectUser;
 import com.vicky.modules.collectmgr.service.CollectUserService;
 import com.vicky.modules.usermgr.service.UserService;
@@ -43,6 +42,20 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
         return this.collectUserService;
     }
 
+    @RequestMapping("isCollected")
+    @ResponseBody
+    public StatusMsg isCollected(String username) {
+        CollectUser collectUser = new CollectUser();
+        collectUser.setCollectingUsername(super.getUser().getUsername());
+        collectUser.setCollectingUsername(username);
+        CollectUser r = this.collectUserService.selectOne(collectUser);
+        if (r != null) {
+            return super.simpleBuildSuccessMsg("yes");
+        } else {
+            return super.simpleBuildSuccessMsg("no");
+        }
+    }
+
     @RequestMapping("getList")
     @ResponseBody
     public Map<String, Object> getList(String username, Integer pageIndex, Integer pageSize) {
@@ -69,7 +82,7 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
     public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, String primaryKey) throws Exception {
         CollectUser collectUser = this.collectUserService.selectByPrimaryKey(primaryKey);
         if (!collectUser.getCollectingUsername().equals(super.getUser().getUsername())) {
-            throw new StatusMsgException("权限不够");
+            return super.simpleBuildErrorMsg("权限不够");
         }
         return super.deleteById(request, response, primaryKey); //To change body of generated methods, choose Tools | Templates.
     }
@@ -79,7 +92,7 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
     @ResponseBody
     public StatusMsg save(HttpServletRequest request, HttpServletResponse response, CollectUser t) throws Exception {
         if (this.userService.selectByPrimaryKey(t.getCollectedUsername()) == null) {
-            throw new StatusMsgException("被收藏的用户名有误");
+            return super.simpleBuildErrorMsg("被收藏的用户名有误");
         }
         t.setCollectingUsername(super.getUser().getUsername());
         t.setCreateTime(new Date());

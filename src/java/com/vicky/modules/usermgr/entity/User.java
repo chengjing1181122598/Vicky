@@ -33,6 +33,9 @@ public class User implements Serializable, Cloneable {
 
     public static int HEAD_MAX_SIZE = Final.FILE_SIZE_M * 2;
 
+    public static String MEMCACHED_PREFFIX = "user_";
+    public static int MEMCACHED_TIME_SECOND = 86400;
+
     @Id
     @Column(name = "username")
     @Pattern(regexp = "[\u4e00-\u9fa5\u0800-\u4e00\\w]+", message = "用户名只能为中文英文日文数字")

@@ -29,9 +29,6 @@ public class VideoModule implements Serializable {
     private String moduleId;
     @Column(name = "module_name")
     private String moduleName;
-    @Column(name = "create_time")
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Date createTime;
 
     /**
      * @return the moduleName
@@ -45,20 +42,6 @@ public class VideoModule implements Serializable {
      */
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
-    }
-
-    /**
-     * @return the createTime
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * @param createTime the createTime to set
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     /**

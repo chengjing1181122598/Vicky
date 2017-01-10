@@ -14,8 +14,6 @@ import com.vicky.common.utils.sendemail.SendEmailImpl;
 import com.vicky.common.utils.sendemail.SendEmailable;
 import com.vicky.common.utils.service.BaseService;
 import com.vicky.common.utils.statusmsg.StatusMsg;
-import com.vicky.common.utils.statusmsg.StatusMsgException;
-import com.vicky.common.utils.statusmsg.StatusType;
 import com.vicky.modules.usermgr.entity.User;
 import com.vicky.modules.usermgr.service.UserService;
 import com.vicky.modules.usermgr.utils.ActivateMail;
@@ -58,16 +56,16 @@ public class UserController extends MyEntityController<User, String> {
 
     @RequestMapping("updateHead")
     @ResponseBody
-    public StatusMsg updateHead(@RequestParam(value = "headImage") MultipartFile file) throws IOException, CloneNotSupportedException, StatusMsgException {
+    public StatusMsg updateHead(@RequestParam(value = "headImage") MultipartFile file) throws IOException, CloneNotSupportedException {
         User user = this.getUser();
         if (file.getSize() > User.HEAD_MAX_SIZE) {
-            throw new StatusMsgException("上传头像不能大于" + User.HEAD_MAX_SIZE / Final.FILE_SIZE_M + "M");
+            return super.simpleBuildErrorMsg("上传头像不能大于" + User.HEAD_MAX_SIZE / Final.FILE_SIZE_M + "M");
         }
 
         String lowerCase = file.getOriginalFilename().toLowerCase();
         if (!lowerCase.endsWith(".jpg") && !lowerCase.endsWith(".png")
                 && !lowerCase.endsWith(".gif") && !lowerCase.endsWith(".jpeg")) {
-            throw new StatusMsgException("请上传图片文件");
+            return super.simpleBuildErrorMsg("请上传图片文件");
         }
 
         file.getInputStream().available();
@@ -85,24 +83,24 @@ public class UserController extends MyEntityController<User, String> {
 
         this.userService.updateSelective(user);
 
-        return super.simpleBuildMsg(StatusType.SUCCESS, "修改头像成功", this.getProtectedUser(user));
+        return super.simpleBuildSuccessMsg("修改头像成功", this.getProtectedUser(user));
     }
 
     @RequestMapping("logout")
     @ResponseBody
     public StatusMsg logout() {
         super.request.getSession().invalidate();
-        return super.simpleBuildMsg(StatusType.SUCCESS, "用户退出成功");
+        return super.simpleBuildSuccessMsg("用户退出成功");
     }
 
     @RequestMapping("update")
     @ResponseBody
-    public StatusMsg update(User updateUser) throws StatusMsgException, CloneNotSupportedException {
+    public StatusMsg update(User updateUser) throws CloneNotSupportedException {
         User user = this.getUser();
         if (updateUser.getSex() != null && !updateUser.getSex().equals("")) {
             if (!updateUser.getSex().equals(User.FEMALE)
                     && !updateUser.getSex().equals(User.MALE) && !updateUser.getSex().equals(User.SECRET)) {
-                throw new StatusMsgException("性别只能为：'男','女'或者'保密'");
+                return super.simpleBuildErrorMsg("性别只能为：'男','女'或者'保密'");
             }
             user.setSex(updateUser.getSex());
         }
@@ -111,24 +109,24 @@ public class UserController extends MyEntityController<User, String> {
         }
         this.userService.updateSelective(user);
 
-        return super.simpleBuildMsg(StatusType.SUCCESS, "修改信息成功", this.getProtectedUser(user));
+        return super.simpleBuildSuccessMsg("修改信息成功", this.getProtectedUser(user));
     }
 
     @RequestMapping("updatePWD")
     @ResponseBody
-    public StatusMsg updatePWD(String frontPWD, String afterPWD) throws StatusMsgException {
+    public StatusMsg updatePWD(String frontPWD, String afterPWD) {
         User user = this.getUser();
         if (!EncodePassword.checkPassword(frontPWD, user.getPassword())) {
-            throw new StatusMsgException("原来密码不正确");
+            return super.simpleBuildErrorMsg("原来密码不正确");
         } else {
 
             if (afterPWD.length() < 8 || afterPWD.length() > 30 || !afterPWD.matches("\\w*[a-zA-Z]+\\w*")) {
-                throw new StatusMsgException("密码长度8位到30位,只能为数字字母,必须含有字母");
+                return super.simpleBuildErrorMsg("密码长度8位到30位,只能为数字字母,必须含有字母");
             }
             user.setPassword(EncodePassword.encodePassword(afterPWD));
             this.userService.updateSelective(user);
         }
-        return super.simpleBuildMsg(StatusType.SUCCESS, "修改密码成功");
+        return super.simpleBuildSuccessMsg("修改密码成功");
     }
 
     @Override
@@ -137,13 +135,13 @@ public class UserController extends MyEntityController<User, String> {
     public StatusMsg getById(HttpServletRequest request, HttpServletResponse response, String username) {
         User user = this.userService.selectByPrimaryKey(username);
         user.setPassword(null);
-        return super.simpleBuildMsg(StatusType.SUCCESS, user);
+        return super.simpleBuildSuccessMsg(user);
     }
 
     @RequestMapping("getUser")
     @ResponseBody
-    public StatusMsg getUserMessage() throws CloneNotSupportedException, StatusMsgException {
-        return super.simpleBuildMsg(StatusType.SUCCESS, this.getProtectedUser(this.getUser()));
+    public StatusMsg getUserMessage() throws CloneNotSupportedException {
+        return super.simpleBuildSuccessMsg(this.getProtectedUser(this.getUser()));
     }
 
     @RequestMapping("login")
@@ -156,26 +154,26 @@ public class UserController extends MyEntityController<User, String> {
             user = this.userService.selectByPrimaryKey(paramUser.getUsername());
         }
         if (user == null) {
-            throw new StatusMsgException("找不到用户,请检查用户名是否正确");
+            return super.simpleBuildErrorMsg("找不到用户,请检查用户名是否正确");
         }
         if (!EncodePassword.checkPassword(paramUser.getPassword(), user.getPassword())) {
-            throw new StatusMsgException("密码错误");
+            return super.simpleBuildErrorMsg("密码错误");
         }
         super.request.getSession().setAttribute("user", user);
-        return super.simpleBuildMsg(StatusType.SUCCESS, this.getProtectedUser(user));
+        return super.simpleBuildSuccessMsg(this.getProtectedUser(user));
     }
 
     @RequestMapping("finishRegister")
     @ResponseBody
     public StatusMsg prepareRegister(String activateCode) throws Exception {
-        System.out.println(super.request.getSession().getAttribute("avtivateCode"));
-        if (activateCode.equals(super.request.getSession().getAttribute("avtivateCode"))) {
+        System.out.println(super.request.getSession().getAttribute("activateCode"));
+        if (activateCode.equals(super.request.getSession().getAttribute("activateCode"))) {
             User user = (User) super.request.getSession().getAttribute("registerUser");
             this.userService.save(user);
             super.request.getSession().setAttribute("user", user);
-            return super.simpleBuildMsg(StatusType.SUCCESS, "用户激活成功!", this.getProtectedUser(user));
+            return super.simpleBuildSuccessMsg("用户激活成功!", this.getProtectedUser(user));
         } else {
-            throw new StatusMsgException("激活码不正确!");
+            return super.simpleBuildErrorMsg("激活码不正确!");
         }
     }
 
@@ -184,23 +182,23 @@ public class UserController extends MyEntityController<User, String> {
     public StatusMsg prepareRegister(@Valid User u, BindingResult result) throws Exception {
         if (result.hasErrors()) {
             FieldError error = result.getFieldError();
-            throw new StatusMsgException(error.getDefaultMessage());
+            return super.simpleBuildErrorMsg(error.getDefaultMessage());
         }
 
         super.request.getSession(true);
         String username = u.getUsername();
         String email = u.getEmail();
         if (this.userService.selectByPrimaryKey(username) != null) {
-            throw new StatusMsgException("该用户已存在");
+            return super.simpleBuildErrorMsg("该用户已存在");
         }
         User queryUser = new User();
         queryUser.setEmail(email);
         if (this.userService.selectOne(queryUser) != null) {
-            throw new StatusMsgException("该邮箱已注册");
+            return super.simpleBuildErrorMsg("该邮箱已注册");
         }
 
-        String avtivateCode = (int) (Math.random() * 900000 + 100000) + "";
-        Mail activateMail = new ActivateMail(email, avtivateCode);
+        String activateCode = (int) (Math.random() * 900000 + 100000) + "";
+        Mail activateMail = new ActivateMail(email, activateCode);
         SendEmailable sendEmailable = new SendEmailImpl();
         sendEmailable.send(activateMail);
 
@@ -210,9 +208,9 @@ public class UserController extends MyEntityController<User, String> {
         u.setRelativePath(Final.FILE_SERVER_PATH + User.DEFAULT_HEAD_RELATIVE_PATH);
 
         super.request.getSession().setAttribute("registerUser", u);
-        super.request.getSession().setAttribute("avtivateCode", avtivateCode);
-        System.out.println(super.request.getSession().getAttribute("avtivateCode"));
-        return super.simpleBuildMsg(StatusType.SUCCESS, "发送邮件成功,请前往邮箱获取激活码!", this.getProtectedUser(u));
+        super.request.getSession().setAttribute("activateCode", activateCode);
+        System.out.println(super.request.getSession().getAttribute("activateCode"));
+        return super.simpleBuildSuccessMsg("发送邮件成功,请前往邮箱获取激活码!", this.getProtectedUser(u));
     }
 
 }
