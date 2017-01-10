@@ -165,7 +165,7 @@ public class UserController extends MyEntityController<User, String> {
 
     @RequestMapping("finishRegister")
     @ResponseBody
-    public StatusMsg prepareRegister(String activateCode) throws Exception {
+    public StatusMsg finishRegister(String activateCode) throws Exception {
         System.out.println(super.request.getSession().getAttribute("activateCode"));
         if (activateCode.equals(super.request.getSession().getAttribute("activateCode"))) {
             User user = (User) super.request.getSession().getAttribute("registerUser");
