@@ -17,6 +17,7 @@ import com.vicky.common.utils.statusmsg.StatusMsg;
 import com.vicky.modules.usermgr.entity.User;
 import com.vicky.modules.usermgr.service.UserService;
 import com.vicky.modules.usermgr.utils.ActivateMail;
+import com.vicky.modules.usermgr.utils.ResetPWDMail;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -112,21 +113,39 @@ public class UserController extends MyEntityController<User, String> {
         return super.simpleBuildSuccessMsg("修改信息成功", this.getProtectedUser(user));
     }
 
-    @RequestMapping("updatePWD")
+    @RequestMapping("prepareUpdatePWD")
     @ResponseBody
-    public StatusMsg updatePWD(String frontPWD, String afterPWD) {
-        User user = this.getUser();
-        if (!EncodePassword.checkPassword(frontPWD, user.getPassword())) {
-            return super.simpleBuildErrorMsg("原来密码不正确");
-        } else {
-
-            if (afterPWD.length() < 8 || afterPWD.length() > 30 || !afterPWD.matches("\\w*[a-zA-Z]+\\w*")) {
-                return super.simpleBuildErrorMsg("密码长度8位到30位,只能为数字字母,必须含有字母");
-            }
-            user.setPassword(EncodePassword.encodePassword(afterPWD));
-            this.userService.updateSelective(user);
+    public StatusMsg prepareUpdatePWD(String email) throws Exception {
+        User resetUser = this.userService.selectOne(new User(email));
+        if (resetUser == null) {
+            return super.simpleBuildErrorMsg("该邮箱没有注册");
         }
-        return super.simpleBuildSuccessMsg("修改密码成功");
+        String validCode = (int) (Math.random() * 900000 + 100000) + "";
+        Mail resetPWDMail = new ResetPWDMail(email, validCode);
+        SendEmailable sendEmailable = new SendEmailImpl();
+        sendEmailable.send(resetPWDMail);
+        super.request.getSession().setAttribute("validCode", validCode);
+        super.request.getSession().setAttribute("resetUser", resetUser);
+        return super.simpleBuildSuccessMsg("请前往邮箱获取验证码");
+    }
+
+    @RequestMapping("finishUpdatePWD")
+    @ResponseBody
+    public StatusMsg finishUpdatePWD(String validCode, String password) {
+        if (!validCode.equals(super.request.getSession().getAttribute("validCode"))) {
+            return super.simpleBuildErrorMsg("验证码不正确");
+        }
+        if (password.length() < 8 || password.length() > 30 || !password.matches("\\w*[a-zA-Z]+\\w*")) {
+            return super.simpleBuildErrorMsg("密码长度8位到30位,只能为数字字母,必须含有字母");
+        }
+
+        User resetUser = (User) super.request.getSession().getAttribute("resetUser");
+        resetUser.setPassword(EncodePassword.encodePassword(password));
+        this.userService.updateSelective(resetUser);
+        super.request.getSession().removeAttribute("validCode");
+        super.request.getSession().removeAttribute("resetUser");
+        super.request.getSession().setAttribute("user", resetUser);
+        return super.simpleBuildSuccessMsg("重置密码成功");
     }
 
     @Override
