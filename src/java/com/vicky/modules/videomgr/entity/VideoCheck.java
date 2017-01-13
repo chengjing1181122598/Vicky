@@ -37,7 +37,7 @@ public class VideoCheck implements Serializable {
     @Column(name = "video_name")
     private String videoName;
     @Column(name = "video_title")
-    @Length(min = 1, max = 20, message = "标题长度在1到20位之间")
+    @Length(min = 1, max = 30, message = "标题长度在1到30位之间")
     private String videoTitle;
     @Column(name = "username")
     private String username;
