@@ -49,6 +49,7 @@
             <mvc:mapping path="/videomodule/updateById"/>
             <mvc:mapping path="/videomodule/save"/>
             <mvc:mapping path="/videoCheck/getPageData"/>
+            <mvc:mapping path="/videoCheck/getById"/>
             <mvc:mapping path="/videoCheck/pass"/>
             <mvc:mapping path="/videoCheck/notPass"/>
             <mvc:mapping path="/message/save"/>

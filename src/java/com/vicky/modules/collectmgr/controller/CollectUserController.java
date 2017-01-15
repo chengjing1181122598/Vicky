@@ -76,23 +76,25 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
         return map;
     }
 
-    @Override
-    @RequestMapping("deleteById")
+    @RequestMapping("uncollect")
     @ResponseBody
-    public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, String primaryKey) throws Exception {
-        CollectUser collectUser = this.collectUserService.selectByPrimaryKey(primaryKey);
+    public StatusMsg uncollect(HttpServletRequest request, HttpServletResponse response, String collectedUsername) throws Exception {
+        CollectUser c = new CollectUser();
+        c.setCollectedUsername(collectedUsername);
+        c.setCollectingUsername(super.getUser().getUsername());
+        CollectUser collectUser = this.collectUserService.selectOne(c);
         if (!collectUser.getCollectingUsername().equals(super.getUser().getUsername())) {
             return super.simpleBuildErrorMsg("权限不够");
         }
-        return super.deleteById(request, response, primaryKey); //To change body of generated methods, choose Tools | Templates.
+        this.collectUserService.delete(collectUser);
+        return super.simpleBuildSuccessMsg("取消关注成功", collectUser);
     }
 
-    @Override
-    @RequestMapping("save")
+    @RequestMapping("collect")
     @ResponseBody
-    public StatusMsg save(HttpServletRequest request, HttpServletResponse response, CollectUser t) throws Exception {
+    public StatusMsg collect(HttpServletRequest request, HttpServletResponse response, CollectUser t) throws Exception {
         if (this.userService.selectByPrimaryKey(t.getCollectedUsername()) == null) {
-            return super.simpleBuildErrorMsg("被收藏的用户名有误");
+            return super.simpleBuildErrorMsg("被关注的用户名有误");
         }
         t.setCollectingUsername(super.getUser().getUsername());
         t.setCreateTime(new Date());

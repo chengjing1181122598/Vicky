@@ -93,12 +93,10 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
     
     @RequestMapping("notPass")
     @ResponseBody
-    public StatusMsg notPass(String videoId, String reason) {
-        
+    public StatusMsg notPass(String videoId, String reason) {      
         if (reason == null || reason.length() == 0) {
             return super.simpleBuildErrorMsg("理由不能为空");
-        }
-        
+        }   
         VideoCheck videoCheck = this.checkService.selectByPrimaryKey(videoId);
         this.checkService.deleteById(videoId);
         WebFileUtils.deleteFile(videoCheck.getAbsolutePath());
@@ -122,7 +120,7 @@ public class VideoCheckController extends MyEntityController<VideoCheck, String>
     @RequestMapping("getPageData")
     @ResponseBody
     public Map<String, Object> getPageData(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return super.getPageData(request, response); //To change body of generated methods, choose Tools | Templates.
+        return  super.getPageData(request, response);
     }
     
     @RequestMapping("save")

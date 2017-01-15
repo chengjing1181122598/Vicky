@@ -54,21 +54,23 @@ public class CollectVideoController extends MyEntityController<CollectVideo, Str
         }
     }
 
-    @Override
-    @RequestMapping("deleteById")
+    @RequestMapping("uncollect")
     @ResponseBody
-    public StatusMsg deleteById(HttpServletRequest request, HttpServletResponse response, String primaryKey) throws Exception {
-        CollectVideo collectVideo = this.collectVideoService.selectByPrimaryKey(primaryKey);
+    public StatusMsg uncollect(HttpServletRequest request, HttpServletResponse response, String videoId) throws Exception {
+        CollectVideo c = new CollectVideo();
+        c.setVideoId(videoId);
+        c.setUsername(super.getUser().getUsername());
+        CollectVideo collectVideo = this.collectVideoService.selectOne(c);
         if (!collectVideo.getUsername().equals(super.getUser().getUsername())) {
             return super.simpleBuildErrorMsg("权限不够");
         }
-        return super.deleteById(request, response, primaryKey); //To change body of generated methods, choose Tools | Templates.
+        this.collectVideoService.delete(collectVideo);
+        return super.simpleBuildSuccessMsg("取消收藏成功", collectVideo);
     }
 
-    @Override
-    @RequestMapping("save")
+    @RequestMapping("collect")
     @ResponseBody
-    public StatusMsg save(HttpServletRequest request, HttpServletResponse response, CollectVideo t) throws Exception {
+    public StatusMsg collect(HttpServletRequest request, HttpServletResponse response, CollectVideo t) throws Exception {
         User user = super.getUser();
         Video video = this.videoService.selectByPrimaryKey(t.getVideoId());
         t.setUsername(user.getUsername());
