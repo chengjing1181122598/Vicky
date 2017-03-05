@@ -5,21 +5,20 @@
  */
 package com.vicky.common.service;
 
-import com.vicky.common.utils.service.MybatisBaseService;
 import java.util.concurrent.TimeoutException;
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.exception.MemcachedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Vicky
- * @param <T>
- * @param <Primary>
  */
-public abstract class MemcachedService<T, Primary> extends MybatisBaseService<T, Primary> {
+@Service
+public class MemcachedService {
 
     @Autowired
     protected MemcachedClient memcachedClient;
@@ -42,7 +41,7 @@ public abstract class MemcachedService<T, Primary> extends MybatisBaseService<T,
         }
     }
 
-    protected void setMemcached(String key, int time, Object o) {
+    public void setMemcached(String key, int time, Object o) {
         try {
             this.memcachedClient.set(key, time, o);
         } catch (TimeoutException | InterruptedException | MemcachedException ex) {
@@ -50,8 +49,8 @@ public abstract class MemcachedService<T, Primary> extends MybatisBaseService<T,
             ex.printStackTrace();
         }
     }
-
-    protected <O> O getMemcached(String key) {
+    
+    public <O> O getMemcached(String key) {
         try {
             return this.memcachedClient.get(key);
         } catch (TimeoutException | InterruptedException | MemcachedException ex) {

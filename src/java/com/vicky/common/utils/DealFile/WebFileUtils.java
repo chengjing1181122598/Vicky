@@ -8,6 +8,7 @@ package com.vicky.common.utils.DealFile;
 import com.vicky.common.utils.TreadPool.ThreadPool;
 import java.io.File;
 import java.util.UUID;
+import javax.servlet.http.Part;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,7 +69,7 @@ public class WebFileUtils {
         for (char c : hss) {
             absoluteUrl = absoluteUrl + "/" + c;
         }
-        ThreadPool.FILE_THREADPOOL.execute(new WebFileSave(multipartFile, absoluteUrl + "/" + username, filename));
+        ThreadPool.FILE_THREADPOOL.execute(new WebFileSaveMTF(multipartFile, absoluteUrl + "/" + username, filename));
         absoluteUrl = absoluteUrl + "/" + username + "/" + filename;
         return absoluteUrl;
     }
@@ -112,7 +113,7 @@ public class WebFileUtils {
         relativeUrl = relativeUrl + "/" + username + "/" + filename;
         path = path + "/" + username;
         String absoluteUrl = path + "/" + filename;
-        ThreadPool.FILE_THREADPOOL.execute(new WebFileSave(multipartFile, path, filename));
+        ThreadPool.FILE_THREADPOOL.execute(new WebFileSaveMTF(multipartFile, path, filename));
         return new String[]{absoluteUrl, relativeUrl};
     }
 
@@ -153,7 +154,91 @@ public class WebFileUtils {
         }
         url = url + "/" + username + "/" + filename;
         path = path + "/" + username;
-        ThreadPool.FILE_THREADPOOL.execute(new WebFileSave(multipartFile, path, filename));
+        ThreadPool.FILE_THREADPOOL.execute(new WebFileSaveMTF(multipartFile, path, filename));
+        path = path + "/" + filename;
+        return new String[]{path, url};
+    }
+
+    /**
+     * 保存web文件,文件经过UUID重命名以及哈希打散文件夹存储, 如果输入的用户名参数不变,
+     * <br>
+     * 则该用户的所有文件都在一个文件夹下, 由于返回了相对路径,直接在html元素"src"填写即可访问
+     *
+     * @param base64String
+     * @param filename
+     * @param otherServerPath 其他服务器绝对根路径,不包括项目根路径,即文件路径
+     * @param webRootPath web根目录,即浏览器主机url后面的第一个,适用与图片,视频,音乐等文件的"src"的填写
+     * @param directory 保存的目录
+     * @param username 用户名,输入这个参数可以让文件清晰容量梳理
+     * @return 字符串数组,其中String[0]为文件绝对路径,String[1]为其他服务器的路径
+     */
+    public static String[] savePublicFileAtOtherServer(String base64String, String filename, String otherServerPath,
+            String webRootPath, String directory, String username) {
+        if (webRootPath.charAt(0) != '/') {
+            webRootPath = "/" + webRootPath;
+        }
+        if (directory.charAt(0) != '/') {
+            directory = "/" + directory;
+        }
+        String path = otherServerPath + webRootPath + directory;
+        String url = webRootPath + directory;
+        String suffix = filename.substring(filename.lastIndexOf("."));
+
+        //文件UUID重命名
+        filename = UUID.randomUUID().toString() + suffix;
+        //文件夹哈希打散存储
+        int hash = (username + "www.livicky.cn").hashCode();
+        String hashStr = Integer.toHexString(hash);//转成十六进制（长度为8） 每一位生成一个文件夹（每一级最多16个目录）
+        char[] hss = hashStr.toCharArray();//转为char型数组
+        for (char c : hss) {
+            path = path + "/" + c;
+            url = url + "/" + c;
+        }
+        url = url + "/" + username + "/" + filename;
+        path = path + "/" + username;
+        ThreadPool.FILE_THREADPOOL.execute(new WebFileSaveBase64(base64String, path, filename));
+        path = path + "/" + filename;
+        return new String[]{path, url};
+    }
+
+    /**
+     * 保存web文件,文件经过UUID重命名以及哈希打散文件夹存储, 如果输入的用户名参数不变,
+     * <br>
+     * 则该用户的所有文件都在一个文件夹下, 由于返回了相对路径,直接在html元素"src"填写即可访问
+     *
+     * @param part
+     * @param otherServerPath 其他服务器绝对根路径,不包括项目根路径,即文件路径
+     * @param webRootPath web根目录,即浏览器主机url后面的第一个,适用与图片,视频,音乐等文件的"src"的填写
+     * @param directory 保存的目录
+     * @param username 用户名,输入这个参数可以让文件清晰容量梳理
+     * @return 字符串数组,其中String[0]为文件绝对路径,String[1]为其他服务器的路径
+     */
+    public static String[] savePublicFileAtOtherServer(Part part, String otherServerPath,
+            String webRootPath, String directory, String username) {
+        if (webRootPath.charAt(0) != '/') {
+            webRootPath = "/" + webRootPath;
+        }
+        if (directory.charAt(0) != '/') {
+            directory = "/" + directory;
+        }
+        String path = otherServerPath + webRootPath + directory;
+        String url = webRootPath + directory;
+        String filename = part.getSubmittedFileName();
+        String suffix = filename.substring(filename.lastIndexOf("."));
+
+        //文件UUID重命名
+        filename = UUID.randomUUID().toString() + suffix;
+        //文件夹哈希打散存储
+        int hash = (username + "www.livicky.cn").hashCode();
+        String hashStr = Integer.toHexString(hash);//转成十六进制（长度为8） 每一位生成一个文件夹（每一级最多16个目录）
+        char[] hss = hashStr.toCharArray();//转为char型数组
+        for (char c : hss) {
+            path = path + "/" + c;
+            url = url + "/" + c;
+        }
+        url = url + "/" + username + "/" + filename;
+        path = path + "/" + username;
+        ThreadPool.FILE_THREADPOOL.execute(new WebFileSavePart(part, path, filename));
         path = path + "/" + filename;
         return new String[]{path, url};
     }

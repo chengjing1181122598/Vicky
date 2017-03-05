@@ -30,7 +30,7 @@ public interface CommentFloorMapper extends Mapper<CommentFloor> {
         public String getList(String videoId) {
             return new SQL() {
                 {
-                    SELECT("t1.username username , t1.image_relative_path relativePath , t2.content content , t2.create_time createTime");
+                    SELECT("t1.username username , t1.image_relative_path relativePath , t2.content content , t2.create_time createTime , t2.floor_id floorId");
                     FROM("user t1");
                     FROM("comment_floor t2");
                     WHERE("t2.video_id = #{videoId} and t2.username = t1.username");

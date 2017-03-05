@@ -47,7 +47,7 @@ public class CollectUserController extends MyEntityController<CollectUser, Strin
     public StatusMsg isCollected(String username) {
         CollectUser collectUser = new CollectUser();
         collectUser.setCollectingUsername(super.getUser().getUsername());
-        collectUser.setCollectingUsername(username);
+        collectUser.setCollectedUsername(username);
         CollectUser r = this.collectUserService.selectOne(collectUser);
         if (r != null) {
             return super.simpleBuildSuccessMsg("yes");

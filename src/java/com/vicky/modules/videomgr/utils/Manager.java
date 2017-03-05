@@ -12,7 +12,7 @@ package com.vicky.modules.videomgr.utils;
 public class Manager {
     
     public static final String DEFAULT_MANAGER_USERNAME = "manager";
-    public static final String DEFAULT_MANAGER_PASSWORD = "123456789";
+    public static final String DEFAULT_MANAGER_PASSWORD = "5201314liweiqi";
 
     private String username;
 

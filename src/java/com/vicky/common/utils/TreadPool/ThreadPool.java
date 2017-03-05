@@ -15,6 +15,6 @@ import java.util.concurrent.Executors;
  */
 public final class ThreadPool {
 
-    public static final ExecutorService FILE_THREADPOOL = Executors.newCachedThreadPool();
-    public static final ExecutorService SEND_EMAIL_THREADPOOL = Executors.newCachedThreadPool();
+    public static final ExecutorService FILE_THREADPOOL = Executors.newFixedThreadPool(10);
+    public static final ExecutorService SEND_EMAIL_THREADPOOL = Executors.newFixedThreadPool(10);
 }

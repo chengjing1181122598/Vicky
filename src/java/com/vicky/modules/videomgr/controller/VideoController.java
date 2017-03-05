@@ -17,6 +17,8 @@ import com.vicky.modules.commentmgr.entity.CommentFloor;
 import com.vicky.modules.commentmgr.service.CommentFloorService;
 import com.vicky.modules.messagemgr.entity.Message;
 import com.vicky.modules.messagemgr.service.MessageService;
+import com.vicky.modules.rankmgr.entity.VideoPlayNumber;
+import com.vicky.modules.rankmgr.service.PlayNumberService;
 import com.vicky.modules.videomgr.entity.Video;
 import com.vicky.modules.videomgr.service.VideoService;
 import com.vicky.modules.videomgr.utils.MessageBuild;
@@ -38,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("video")
 public class VideoController extends MyEntityController<Video, String> {
-
+    
     @Autowired
     private VideoService videoService;
     @Autowired
@@ -47,12 +49,14 @@ public class VideoController extends MyEntityController<Video, String> {
     private CollectVideoService collectVideoService;
     @Autowired
     private CommentFloorService commentFloorService;
-
+    @Autowired
+    private PlayNumberService numberService;
+    
     @Override
     protected BaseService<Video, String> getBaseService() {
         return this.videoService;
     }
-
+    
     @ResponseBody
     @RequestMapping("getSlipeData")
     public Map<String, Object> getSlipeData() {
@@ -62,7 +66,7 @@ public class VideoController extends MyEntityController<Video, String> {
         map.put(Page.DATA_KEY, list);
         return map;
     }
-
+    
     @ResponseBody
     @RequestMapping("getPerSize")
     public StatusMsg getPerSize() {
@@ -70,14 +74,14 @@ public class VideoController extends MyEntityController<Video, String> {
         statusMsg.getMessage().put(StatusMsg.ENTITY, this.videoService.getPerSize());
         return statusMsg;
     }
-
+    
     @Override
     @ResponseBody
     @RequestMapping("getPageData")
     public Map<String, Object> getPageData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return super.getPageData(request, response); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     @ResponseBody
     @RequestMapping("deleteById")
@@ -94,18 +98,19 @@ public class VideoController extends MyEntityController<Video, String> {
         }
         WebFileUtils.deleteFile(video.getAbsolutePath());
         WebFileUtils.deleteFile(video.getCoverAbsolutePath());
-
+        
         this.collectVideoService.delete(new CollectVideo(primaryKey));
         this.commentFloorService.delete(new CommentFloor(primaryKey));
-
+        this.numberService.delete(new VideoPlayNumber(primaryKey));
+        
         return super.deleteById(request, response, primaryKey); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     @ResponseBody
     @RequestMapping("getById")
     public StatusMsg getById(HttpServletRequest request, HttpServletResponse response, String primaryKey) {
         return super.getById(request, response, primaryKey); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }

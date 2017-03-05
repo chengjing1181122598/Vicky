@@ -20,48 +20,50 @@ import tk.mybatis.mapper.common.Mapper;
  * @author Vicky
  */
 @Service
-public class VideoService extends MemcachedService<Video, String> {
-    
+public class VideoService extends MybatisBaseService<Video, String> {
+
     @Autowired
     private VideoMapper videoMapper;
-    
+    @Autowired
+    private MemcachedService memcachedService;
+
     @Override
     public void deleteById(String id) {
-        super.deleteMemcached(Video.MEMCACHED_PREFFIX + id);
+        this.memcachedService.deleteMemcached(Video.MEMCACHED_PREFFIX + id);
         super.deleteById(id); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void save(Video t) {
         super.save(t); //To change body of generated methods, choose Tools | Templates.
-        super.setMemcached(Video.MEMCACHED_PREFFIX + t.getVideoId(), Video.MEMCACHED_TIME_SECOND, t);
+        this.memcachedService.setMemcached(Video.MEMCACHED_PREFFIX + t.getVideoId(), Video.MEMCACHED_TIME_SECOND, t);
     }
-    
+
     @Override
     public Video selectByPrimaryKey(String id) {
-        Video video = super.getMemcached(Video.MEMCACHED_PREFFIX + id);
+        Video video = this.memcachedService.getMemcached(Video.MEMCACHED_PREFFIX + id);
         if (video == null) {
             video = super.selectByPrimaryKey(id);
             if (video != null) {
-                super.setMemcached(Video.MEMCACHED_PREFFIX + video.getVideoId(), Video.MEMCACHED_TIME_SECOND, video);
+                this.memcachedService.setMemcached(Video.MEMCACHED_PREFFIX + video.getVideoId(), Video.MEMCACHED_TIME_SECOND, video);
             }
             return video;
         } else {
             return video;
         }
     }
-    
+
     @Override
     protected Mapper<Video> getMapper() {
         return this.videoMapper;
     }
-    
+
     public List<Map> getPerSize() {
         return this.videoMapper.getPerSize();
     }
-    
+
     public List<Map> getSlipeData() {
         return this.videoMapper.getSlipeData();
     }
-    
+
 }

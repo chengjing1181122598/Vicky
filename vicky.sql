@@ -1,9 +1,9 @@
 /*==============================================================*/
 /* 创建数据库                                       */
 /*==============================================================*/
-DROP DATABASE IF EXISTS VICKY;
-CREATE DATABASE VICKY;
-USE VICKY;
+DROP DATABASE IF EXISTS vicky;
+CREATE DATABASE vicky;
+USE vicky;
 
 /*==============================================================*/
 /* 预处理                                                       */
@@ -61,6 +61,10 @@ drop index video_check_table_video_title_index on video_check;
 drop table if exists video_check;
 
 drop table if exists video_module;
+
+drop index play_number_index on video_play_number;
+
+drop table if exists video_play_number;
 
 /*==============================================================*/
 /* Table: collect_user                                          */
@@ -367,11 +371,38 @@ DEFAULT CHARACTER SET = utf8;
 
 alter table video_module comment '视频模块表，模块表目前写死，“001”表示“动画”、“002”表示“番剧”、“003”表示“音乐”、“004”表示“舞蹈';
 
+/*==============================================================*/
+/* Table: video_play_number                                     */
+/*==============================================================*/
+create table video_play_number
+(
+   play_number_id       varchar(36) not null comment '主键，javaUUID',
+   video_id             varchar(36) not null comment '视频主键',
+   number               bigint not null default 0,
+   version              bigint not null default 0,
+   primary key (play_number_id),
+   unique key AK_Key_2 (video_id)
+)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+alter table video_play_number comment '记录视频播放数量';
+
+/*==============================================================*/
+/* Index: play_number_index                                     */
+/*==============================================================*/
+create unique index play_number_index on video_play_number
+(
+   video_id
+);
+
 alter table video add constraint FK_Reference_1 foreign key (module_id)
       references video_module (module_id) on delete restrict on update restrict;
 
 alter table video_check add constraint FK_Reference_2 foreign key (module_id)
       references video_module (module_id) on delete restrict on update restrict;
+
+
 
 
 /*==============================================================*/
@@ -389,7 +420,3 @@ insert into video_module values('009','时尚');
 insert into video_module values('010','广告');
 insert into video_module values('011','娱乐');
 insert into video_module values('012','影视');
-
-
-
-

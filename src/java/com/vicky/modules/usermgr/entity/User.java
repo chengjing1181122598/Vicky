@@ -24,8 +24,8 @@ import org.hibernate.validator.constraints.Length;
 @Table(name = "user")
 public class User implements Serializable, Cloneable {
 
-    public static final String DEFAULT_HEAD_RELATIVE_PATH = "/vicky_file/default/user_head.png";
-    public static final String DEFAULT_HEAD_ABSOLUTE_PATH = "/F:/nginx_file/html/vicky_file/default/user_head.png";
+    public static final String DEFAULT_HEAD_RELATIVE_PATH = "http://119.29.34.100/vicky_file/default/user_head.png";
+    public static final String DEFAULT_HEAD_ABSOLUTE_PATH = "/usr/share/nginx/vicky_file/default/user_head.png";
 
     public static final String MALE = "男";
     public static final String FEMALE = "女";
@@ -34,7 +34,7 @@ public class User implements Serializable, Cloneable {
     public static int HEAD_MAX_SIZE = Final.FILE_SIZE_M * 2;
 
     public static String MEMCACHED_PREFFIX = "user_";
-    public static int MEMCACHED_TIME_SECOND = 86400;
+    public static int MEMCACHED_TIME_SECOND = 24 * 60 * 60;
 
     @Id
     @Column(name = "username")

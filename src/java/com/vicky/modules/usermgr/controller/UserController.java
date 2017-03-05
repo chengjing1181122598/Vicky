@@ -29,9 +29,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -57,21 +56,21 @@ public class UserController extends MyEntityController<User, String> {
 
     @RequestMapping("updateHead")
     @ResponseBody
-    public StatusMsg updateHead(@RequestParam(value = "headImage") MultipartFile file) throws IOException, CloneNotSupportedException {
+    public StatusMsg updateHead(String headImage, String imageName) throws IOException, CloneNotSupportedException {
         User user = this.getUser();
-        if (file.getSize() > User.HEAD_MAX_SIZE) {
+        BASE64Decoder decoder = new BASE64Decoder();
+        byte[] bs = decoder.decodeBuffer(headImage);
+        if (bs.length > User.HEAD_MAX_SIZE) {
             return super.simpleBuildErrorMsg("上传头像不能大于" + User.HEAD_MAX_SIZE / Final.FILE_SIZE_M + "M");
         }
 
-        String lowerCase = file.getOriginalFilename().toLowerCase();
+        String lowerCase = imageName.toLowerCase();
         if (!lowerCase.endsWith(".jpg") && !lowerCase.endsWith(".png")
                 && !lowerCase.endsWith(".gif") && !lowerCase.endsWith(".jpeg")) {
             return super.simpleBuildErrorMsg("请上传图片文件");
         }
 
-        file.getInputStream().available();
-
-        String[] paths = WebFileUtils.savePublicFileAtOtherServer(file,
+        String[] paths = WebFileUtils.savePublicFileAtOtherServer(headImage, imageName,
                 Final.SERVER_PATH, Final.WEB_ROOT_PATH, Final.IMAGE_PATH, user.getUsername());
 
         if (!user.getAbsolutePath().equals(User.DEFAULT_HEAD_ABSOLUTE_PATH)) {
@@ -224,7 +223,7 @@ public class UserController extends MyEntityController<User, String> {
         u.setCreateTime(new Date());
         u.setPassword(EncodePassword.encodePassword(u.getPassword()));
         u.setAbsolutePath(User.DEFAULT_HEAD_ABSOLUTE_PATH);
-        u.setRelativePath(Final.FILE_SERVER_PATH + User.DEFAULT_HEAD_RELATIVE_PATH);
+        u.setRelativePath(User.DEFAULT_HEAD_RELATIVE_PATH);
 
         super.request.getSession().setAttribute("registerUser", u);
         super.request.getSession().setAttribute("activateCode", activateCode);

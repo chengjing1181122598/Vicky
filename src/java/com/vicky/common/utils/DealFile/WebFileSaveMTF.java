@@ -5,13 +5,8 @@
  */
 package com.vicky.common.utils.DealFile;
 
-import com.vicky.common.finalpackage.Final;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Vicky
  */
-public class WebFileSave implements Runnable {
+public class WebFileSaveMTF implements Runnable {
 
     /**
      * 获取日志Logger,为org.slf4j.Logger
@@ -36,7 +31,7 @@ public class WebFileSave implements Runnable {
     private String path;
     private String filename;
 
-    public WebFileSave(MultipartFile multipartFile, String path, String filename) {
+    public WebFileSaveMTF(MultipartFile multipartFile, String path, String filename) {
         this.multipartFile = multipartFile;
         this.path = path;
         this.filename = filename;
